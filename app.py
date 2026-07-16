@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -124,7 +124,7 @@ with st.sidebar:
     
     st.sidebar.markdown("---")
     pagina = st.sidebar.radio("📋 Menu", 
-        ["📋 Analisi Completa", "📈 Statistiche", "📊 KPI Dashboard", "💡 Consiglio Finale", "🔮 ML Explained"],
+        ["📋 Analisi Completa", "📈 Statistiche", "📊 KPI Dashboard", "🔮 ML Explained", "💡 Consiglio Finale"],
         label_visibility="collapsed"
     )
 
@@ -211,7 +211,7 @@ if pagina == "📋 Analisi Completa":
         st.success("✓ Analisi salvata! Vai su 'Statistiche' per una panoramica dei tuoi ultimi 90 giorni.")
 
 # =====================================================================
-# PAGINA 2: STATISTICHE (PRIMA del consiglio)
+# PAGINA 2: STATISTICHE
 # =====================================================================
 elif pagina == "📈 Statistiche":
     st.title("📈 Statistiche Dettagliate - Ultimi 90 Giorni")
@@ -261,7 +261,7 @@ elif pagina == "📈 Statistiche":
         Frequenza cardiaca media durante gli allenamenti.
         <br><br>
         <strong>Interpretazione:</strong><br>
-        • Z1-Z2: {}-130 bpm (recupero)<br>
+        • Z1-Z2: 100-130 bpm (recupero)<br>
         • Z3: 131-150 bpm (base)<br>
         • Z4-Z5: 151+ bpm (intenso)
         </div>
@@ -404,7 +404,7 @@ elif pagina == "📊 KPI Dashboard":
         scenario = scaler.transform([[0, r['ore_sonno'], r['stress_lavoro'], fc_media_stimata, r['rpe_previsto']]])
         prob_rischio = rf_model.predict_proba(scenario)[0][1] * 100
         
-        # WIDGET PRINCIPALI
+        # WIDGET PRINCIPALI CON GAUGE PIU' BELLI
         st.subheader("🎯 Valutazione Odierna")
         
         col_kpi1, col_kpi2, col_kpi3 = st.columns(3)
@@ -414,55 +414,70 @@ elif pagina == "📊 KPI Dashboard":
                 mode="gauge+number+delta",
                 value=prob_rischio,
                 title="Rischio Infortunio",
+                domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={
-                    'axis': {'range': [0, 100]},
-                    'bar': {'color': "darkblue"},
+                    'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': 'darkblue'},
+                    'bar': {'color': "darkblue", 'thickness': 0.7},
+                    'bgcolor': "white",
+                    'borderwidth': 2,
+                    'bordercolor': "gray",
                     'steps': [
-                        {'range': [0, 25], 'color': "lightgray"},
-                        {'range': [25, 60], 'color': "gray"},
-                        {'range': [60, 100], 'color': "darkgray"}
+                        {'range': [0, 25], 'color': "#34a853"},
+                        {'range': [25, 60], 'color': "#fbbc04"},
+                        {'range': [60, 100], 'color': "#ea4335"}
                     ],
                     'threshold': {
-                        'line': {'color': "red", 'width': 4},
+                        'line': {'color': "darkred", 'width': 4},
                         'thickness': 0.75,
                         'value': 60
                     }
                 },
-                number={'suffix': "%"},
-                domain={'x': [0, 1], 'y': [0, 1]}
+                number={'suffix': "%", 'font': {'size': 24}},
             ))
-            fig_risk.update_layout(height=300)
+            fig_risk.update_layout(height=320, margin=dict(l=20, r=20, t=50, b=20), paper_bgcolor="#f8f9fa")
             st.plotly_chart(fig_risk, use_container_width=True)
         
         with col_kpi2:
+            recovery_score = r['recovery_score']
             fig_recovery = go.Figure(go.Indicator(
                 mode="gauge+number",
-                value=r['recovery_score'],
+                value=recovery_score,
                 title="Recovery Score",
+                domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={
-                    'axis': {'range': [0, 100]},
-                    'bar': {'color': "darkgreen"},
+                    'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': 'darkgreen'},
+                    'bar': {'color': "darkgreen", 'thickness': 0.7},
+                    'bgcolor': "white",
+                    'borderwidth': 2,
+                    'bordercolor': "gray",
                     'steps': [
-                        {'range': [0, 40], 'color': "lightgray"},
-                        {'range': [40, 75], 'color': "gray"},
-                        {'range': [75, 100], 'color': "darkgray"}
+                        {'range': [0, 40], 'color': "#ea4335"},
+                        {'range': [40, 75], 'color': "#fbbc04"},
+                        {'range': [75, 100], 'color': "#34a853"}
                     ]
                 },
-                number={'suffix': "%"},
-                domain={'x': [0, 1], 'y': [0, 1]}
+                number={'suffix': "%", 'font': {'size': 24}},
             ))
-            fig_recovery.update_layout(height=300)
+            fig_recovery.update_layout(height=320, margin=dict(l=20, r=20, t=50, b=20), paper_bgcolor="#f8f9fa")
             st.plotly_chart(fig_recovery, use_container_width=True)
         
         with col_kpi3:
+            sma_valore = sma
+            sma_color = "#34a853" if sma < 10 else "#fbbc04" if sma < 15 else "#ea4335"
             fig_sma = go.Figure(go.Indicator(
                 mode="number+delta",
-                value=sma,
+                value=sma_valore,
                 title="SMA Score",
-                number={'valueformat': '.1f'},
-                delta={'reference': 12, 'relative': False}
+                domain={'x': [0, 1], 'y': [0, 1]},
+                number={'valueformat': '.1f', 'font': {'size': 48}, 'prefix': ''},
+                delta={'reference': 12, 'relative': False, 'font': {'size': 16}}
             ))
-            fig_sma.update_layout(height=300)
+            fig_sma.update_layout(
+                height=320,
+                margin=dict(l=20, r=20, t=50, b=20),
+                paper_bgcolor="#f8f9fa",
+                font=dict(color=sma_color, size=24)
+            )
             st.plotly_chart(fig_sma, use_container_width=True)
         
         st.markdown("---")
@@ -551,7 +566,199 @@ elif pagina == "📊 KPI Dashboard":
             st.plotly_chart(fig_sleep, use_container_width=True)
 
 # =====================================================================
-# PAGINA 4: CONSIGLIO FINALE (SPOSTATO DOPO STATISTICHE)
+# PAGINA 4: ML EXPLAINED
+# =====================================================================
+elif pagina == "🔮 ML Explained":
+    st.title("🔮 Machine Learning - Come Funziona")
+    
+    st.markdown("""
+    <div class='info-box'>
+    <h3>🤖 Cosa è il Machine Learning?</h3>
+    <p>È una tecnologia che <strong>impara dai dati</strong> per fare <strong>previsioni accurate</strong>.</p>
+    
+    <p><strong>Nel nostro caso:</strong> Analizziamo i tuoi 90 giorni di allenamenti per scoprire i pattern 
+    che causano infortunio, sovrallenamento o prestazioni ottimali.</p>
+    
+    <p><strong>Accuratezza del modello:</strong> <strong>87-92%</strong> (verificata su dati storici)</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    tab_ml1, tab_ml2, tab_ml3, tab_ml4 = st.tabs(["🌳 Random Forest", "📈 Feature Importance", "🔬 Confusione Matrix", "📊 Metriche di Validazione"])
+    
+    with tab_ml1:
+        st.markdown("""
+        <div class='info-box'>
+        <h3>🌳 Random Forest Classifier - Predizione del Rischio</h3>
+        
+        <p><strong>Come funziona:</strong> Crea 100 "alberi decisionali" indipendenti che analizzano i tuoi dati.</p>
+        
+        <p><strong>Esempio di un albero:</strong></p>
+        <pre style='background: #f5f5f5; padding: 10px; border-radius: 5px;'>
+IF Ore_Sonno < 6 AND RPE > 7 AND FC > 155
+   THEN Rischio Infortunio = ALTO
+ELSE IF Stress_Lavoro > 7 AND Ore_Sonno < 6.5
+   THEN Rischio Infortunio = MODERATO
+ELSE
+   THEN Rischio Infortunio = BASSO
+        </pre>
+        
+        <p><strong>Come decide:</strong> Se 85 alberi su 100 votano "rischio alto" → 85% probabilità</p>
+        
+        <p><strong>Parametri analizzati:</strong></p>
+        <ul>
+        <li>📏 Distanza km</li>
+        <li>😴 Ore Sonno</li>
+        <li>🧠 Stress Lavoro (1-10)</li>
+        <li>❤️ FC Media (battiti/minuto)</li>
+        <li>💪 RPE (sforzo percepito 1-10)</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        df = st.session_state.dati
+        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
+        y_train = df['Rischio Infortunio']
+        
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X_train)
+        
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
+        rf_model.fit(X_scaled, y_train)
+        
+        st.markdown("<p style='text-align: center; font-size: 1.2em;'><strong>✅ Modello Addestrato su 90 giorni di dati</strong></p>", unsafe_allow_html=True)
+    
+    with tab_ml2:
+        st.markdown("""
+        <div class='info-box'>
+        <h3>📊 Feature Importance - Quali Parametri Contano Più?</h3>
+        <p>Ogni albero nel Random Forest aiuta a classificare quali fattori hanno più peso nelle previsioni.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        df = st.session_state.dati
+        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
+        y_train = df['Rischio Infortunio']
+        
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X_train)
+        
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
+        rf_model.fit(X_scaled, y_train)
+        
+        features = ['Distanza', 'Sonno', 'Stress', 'FC Media', 'RPE']
+        importances = rf_model.feature_importances_
+        
+        df_imp = pd.DataFrame({'Feature': features, 'Importanza': importances}).sort_values('Importanza', ascending=True)
+        
+        fig_imp = px.barh(df_imp, x='Importanza', y='Feature', height=350,
+                        title="Importanza Relativa dei Parametri",
+                        color='Importanza', color_continuous_scale='Blues')
+        fig_imp.update_layout(xaxis_title="Importanza (%)", yaxis_title="", showlegend=False)
+        st.plotly_chart(fig_imp, use_container_width=True)
+        
+        st.markdown(f"""
+        <div class='success-box'>
+        <p><strong>📊 Risultato:</strong> Il parametro più importante: <strong>{df_imp.iloc[-1]['Feature']}</strong> ({df_imp.iloc[-1]['Importanza']*100:.1f}%)</p>
+        <p>Questo significa che questo fattore influenza più di tutti gli altri le tue probabilità di infortunio.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with tab_ml3:
+        st.markdown("""
+        <div class='warning-box'>
+        <h3>🔬 Confusion Matrix - Accuratezza del Modello</h3>
+        <p>Mostra come il modello classifica i casi: quanti correttamente predetti vs quanti sbagliati.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        df = st.session_state.dati
+        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
+        y_train = df['Rischio Infortunio']
+        
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X_train)
+        
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
+        rf_model.fit(X_scaled, y_train)
+        
+        y_pred = rf_model.predict(X_scaled)
+        cm = confusion_matrix(y_train, y_pred)
+        
+        fig_cm = go.Figure(data=go.Heatmap(
+            z=cm,
+            x=['Predetto: Sicuro', 'Predetto: Rischio'],
+            y=['Reale: Sicuro', 'Reale: Rischio'],
+            colorscale='Blues',
+            text=cm,
+            texttemplate='%{text}',
+            textfont={"size": 16}
+        ))
+        fig_cm.update_layout(
+            title="Confusion Matrix - Accuratezza Previsioni",
+            xaxis_title="Previsione Modello",
+            yaxis_title="Realtà",
+            height=400
+        )
+        st.plotly_chart(fig_cm, use_container_width=True)
+        
+        st.markdown(f"""
+        <div class='success-box'>
+        <p><strong>Interpretazione:</strong></p>
+        <ul>
+        <li><strong>Alto a sinistra ({cm[0,0]}):</strong> Giorni REALMENTE sicuri, predetti CORRETTAMENTE come sicuri ✅</li>
+        <li><strong>Alto a destra ({cm[0,1]}):</strong> Giorni REALMENTE sicuri, ma predetti come rischio (falso allarme) ⚠️</li>
+        <li><strong>Basso a sinistra ({cm[1,0]}):</strong> Giorni REALMENTE a rischio, ma predetti come sicuri (pericoloso!) 🔴</li>
+        <li><strong>Basso a destra ({cm[1,1]}):</strong> Giorni REALMENTE a rischio, predetti CORRETTAMENTE ✅</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with tab_ml4:
+        st.markdown("""
+        <div class='info-box'>
+        <h3>📊 Metriche di Validazione del Modello</h3>
+        
+        <p><strong>Come verifichiamo che il modello sia accurato?</strong></p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        df = st.session_state.dati
+        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
+        y_train = df['Rischio Infortunio']
+        
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X_train)
+        
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
+        rf_model.fit(X_scaled, y_train)
+        
+        y_pred = rf_model.predict(X_scaled)
+        
+        acc = accuracy_score(y_train, y_pred)
+        prec = precision_score(y_train, y_pred, zero_division=0)
+        rec = recall_score(y_train, y_pred, zero_division=0)
+        
+        col_met1, col_met2, col_met3, col_met4 = st.columns(4)
+        
+        col_met1.metric("✅ Accuracy", f"{acc*100:.1f}%", "Quanti corretti")
+        col_met2.metric("🎯 Precision", f"{prec*100:.1f}%", "Falsi positivi bassi")
+        col_met3.metric("🔍 Recall", f"{rec*100:.1f}%", "Catture veri positivi")
+        col_met4.metric("🧠 Sample Size", f"{len(df)}", "Giorni di dati")
+        
+        st.markdown("""
+        <div class='success-box'>
+        <p><strong>Spiegazione Metriche:</strong></p>
+        <ul>
+        <li><strong>Accuracy:</strong> Percentuale complessiva di predizioni corrette</li>
+        <li><strong>Precision:</strong> Di quelli che dice "rischio alto", quanti sono realmente a rischio (evita falsi allarmi)</li>
+        <li><strong>Recall:</strong> Di quelli veramente a rischio, quanti il modello cattura (non perdi casi gravi)</li>
+        <li><strong>Sample Size:</strong> Numero di giorni usati per addestrare il modello</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+# =====================================================================
+# PAGINA 5: CONSIGLIO FINALE
 # =====================================================================
 elif pagina == "💡 Consiglio Finale":
     st.title("💡 Consiglio Personalizzato")
@@ -569,7 +776,7 @@ elif pagina == "💡 Consiglio Finale":
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X_train)
         
-        rf_model = RandomForestClassifier(n_estimators=50, random_state=42, max_depth=6, min_samples_split=8)
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
         rf_model.fit(X_scaled, y_train)
         
         fc_media_stimata = 100 + (r['rpe_previsto'] * 10)
@@ -629,7 +836,7 @@ elif pagina == "💡 Consiglio Finale":
         
         st.markdown("---")
         
-        # RACCOMANDAZIONI DETTAGLIATE CON GRAFICI
+        # RACCOMANDAZIONI DETTAGLIATE CON GRAFICI MULTIPLI
         st.subheader("📋 Piano di Allenamento Consigliato")
         
         if prob_rischio < 25:
@@ -640,7 +847,7 @@ elif pagina == "💡 Consiglio Finale":
             </div>
             """, unsafe_allow_html=True)
             
-            tab_cons1, tab_cons2, tab_cons3 = st.tabs(["📝 Piano Dettagliato", "📊 Grafico Allenamento", "💡 Consigli Extra"])
+            tab_cons1, tab_cons2, tab_cons3, tab_cons4, tab_cons5 = st.tabs(["📝 Piano Dettagliato", "📊 Zone FC", "⚡ Grafici Allenamento", "💪 Progressione", "💡 Consigli Extra"])
             
             with tab_cons1:
                 st.markdown("""
@@ -669,28 +876,78 @@ elif pagina == "💡 Consiglio Finale":
                 """, unsafe_allow_html=True)
             
             with tab_cons2:
-                # Grafico con zone FC
-                fig_zones = go.Figure()
+                col_z1, col_z2 = st.columns(2)
                 
-                zones = ['Z1\n(Recupero)\n60-70%', 'Z2\n(Base)\n70-80%', 'Z3\n(Sostenuto)\n80-90%', 'Z4-Z5\n(Intenso)\n90-100%']
-                valori = [15, 0, 20, 55]  # minuti consigliati
-                colori = ['green', 'yellow', 'orange', 'red']
+                with col_z1:
+                    zones = ['Z1\n(Recupero)\n60-70%', 'Z2\n(Base)\n70-80%', 'Z3\n(Sostenuto)\n80-90%', 'Z4-Z5\n(Intenso)\n90-100%']
+                    valori = [15, 0, 20, 55]
+                    colori = ['#34a853', '#fbbc04', '#ff9800', '#ea4335']
+                    
+                    fig_zones = px.pie(values=valori, names=zones, color_discrete_sequence=colori,
+                                      title="Distribuzione Tempo per Zone FC",
+                                      labels={'value': 'Minuti'})
+                    fig_zones.update_traces(textposition='inside', textinfo='label+percent')
+                    st.plotly_chart(fig_zones, use_container_width=True)
                 
-                fig_zones = px.pie(values=valori, names=zones, color_discrete_sequence=colori,
-                                  title="Distribuzione Tempo per Zone FC",
-                                  labels={'value': 'Minuti'})
-                st.plotly_chart(fig_zones, use_container_width=True)
-                
-                st.markdown("""
-                <div class='info-box'>
-                <strong>📊 Spiegazione Grafico:</strong><br>
-                • Z1-Z2: Recupero attivo (generalmente skip oggi)<br>
-                • Z3: Base con stimolo moderato (20 min)<br>
-                • Z4-Z5: Lavoro intenso principale (55 min)
-                </div>
-                """, unsafe_allow_html=True)
+                with col_z2:
+                    fc_max = 200
+                    fc_zones_data = pd.DataFrame({
+                        'Zona': ['Z1', 'Z2', 'Z3', 'Z4', 'Z5'],
+                        'Min BPM': [int(fc_max*0.6), int(fc_max*0.7), int(fc_max*0.8), int(fc_max*0.9), int(fc_max*0.95)],
+                        'Max BPM': [int(fc_max*0.7), int(fc_max*0.8), int(fc_max*0.9), int(fc_max*0.95), fc_max],
+                        'Intensità': ['Molto Facile', 'Facile', 'Moderato', 'Difficile', 'Massimale']
+                    })
+                    
+                    st.dataframe(fc_zones_data, use_container_width=True, hide_index=True)
             
             with tab_cons3:
+                col_g1, col_g2 = st.columns(2)
+                
+                with col_g1:
+                    rpe_esempio = np.array([2, 3, 4, 5, 6, 7, 8, 8.5, 9, 9.5])
+                    fc_esempio = np.array([110, 120, 130, 140, 150, 160, 170, 175, 180, 185])
+                    
+                    fig_rpe = px.scatter(x=rpe_esempio, y=fc_esempio, 
+                                        labels={'x': 'RPE (1-10)', 'y': 'FC Stimata (bpm)'},
+                                        title="RPE vs FC Stimata",
+                                        height=350)
+                    fig_rpe.add_scatter(x=rpe_esempio, y=fc_esempio, mode='lines', name='Tendenza', 
+                                       line=dict(color='red', width=2))
+                    st.plotly_chart(fig_rpe, use_container_width=True)
+                
+                with col_g2:
+                    velocita_km = np.array([8, 9, 10, 11, 12, 13, 14, 15, 16])
+                    carico = velocita_km * 8  # proxy di carico
+                    colori_vel = ['#34a853' if v < 10 else '#fbbc04' if v < 12 else '#ff9800' if v < 14 else '#ea4335' for v in velocita_km]
+                    
+                    fig_vel = px.bar(x=velocita_km, y=carico, 
+                                    labels={'x': 'Velocità (km/h)', 'y': 'Carico Relativo'},
+                                    title="Carico per Velocità",
+                                    height=350,
+                                    color=colori_vel)
+                    st.plotly_chart(fig_vel, use_container_width=True)
+            
+            with tab_cons4:
+                st.markdown("""
+                <div class='info-box'>
+                <h3>📈 Progressione Consigliata (2 Settimane)</h3>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                progressione_data = pd.DataFrame({
+                    'Giorno': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
+                    'Tipo': ['Easy Run', 'Intervalli', 'Easy Run', 'Lungo', 'Recupero', 'Tempo Run', 'Easy Run', 
+                            'Facile', 'Intervalli+', 'Easy Run', 'Lungo+', 'Recupero', 'Tempo Run+', 'Easy Run'],
+                    'Distanza': ['8 km', '10 km', '8 km', '14 km', '6 km', '12 km', '8 km',
+                                '8 km', '11 km', '8 km', '16 km', '6 km', '13 km', '8 km'],
+                    'RPE': [3, 8, 3, 6, 2, 7, 3, 3, 8.5, 3, 6.5, 2, 7.5, 3],
+                    'Nota': ['Recupero', 'Spinta Max', 'Recupero', 'Lungo', 'Scarico', 'Soglia', 'Recupero',
+                            'Prep', 'Intenso', 'Recupero', 'Lungo+volume', 'Scarico', 'Soglia+', 'Recupero']
+                })
+                
+                st.dataframe(progressione_data, use_container_width=True, hide_index=True)
+            
+            with tab_cons5:
                 st.markdown("""
                 <div class='warning-box'>
                 <h3>🔋 Cosa Fare Dopo l'Allenamento</h3>
@@ -721,7 +978,7 @@ elif pagina == "💡 Consiglio Finale":
             </div>
             """, unsafe_allow_html=True)
             
-            tab_cons1, tab_cons2, tab_cons3 = st.tabs(["📝 Piano Dettagliato", "📊 Grafico Allenamento", "💡 Consigli Extra"])
+            tab_cons1, tab_cons2, tab_cons3, tab_cons4 = st.tabs(["📝 Piano Dettagliato", "📊 Zone FC", "💡 Recupero Focus", "📈 Trend"])
             
             with tab_cons1:
                 st.markdown("""
@@ -754,11 +1011,12 @@ elif pagina == "💡 Consiglio Finale":
                 
                 zones_rec = ['Z1\n(Recupero)\n60-70%', 'Z2\n(Base)\n70-80%']
                 valori_rec = [70, 30]
-                colori_rec = ['lightgreen', 'lightblue']
+                colori_rec = ['#34a853', '#fbbc04']
                 
                 fig_recovery = px.pie(values=valori_rec, names=zones_rec, color_discrete_sequence=colori_rec,
                                      title="Distribuzione Ideale - Giorno di Recupero",
                                      labels={'value': 'Minuti'})
+                fig_recovery.update_traces(textposition='inside', textinfo='label+percent')
                 st.plotly_chart(fig_recovery, use_container_width=True)
             
             with tab_cons3:
@@ -775,6 +1033,16 @@ elif pagina == "💡 Consiglio Finale":
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
+            
+            with tab_cons4:
+                df_trend = df.tail(14).copy()
+                df_trend['Giorno_num'] = range(1, len(df_trend)+1)
+                
+                fig_trend = px.line(df_trend, x='Giorno_num', y=['RPE', 'Stress Lavoro'],
+                                   title="Trend Ultimi 14 Giorni",
+                                   labels={'Giorno_num': 'Giorni fa', 'value': 'Valore'},
+                                   height=350)
+                st.plotly_chart(fig_trend, use_container_width=True)
         
         else:
             st.markdown("""
@@ -784,7 +1052,7 @@ elif pagina == "💡 Consiglio Finale":
             </div>
             """, unsafe_allow_html=True)
             
-            tab_cons1, tab_cons2, tab_cons3 = st.tabs(["📝 Istruzioni Critiche", "📊 Cosa NON Fare", "🚨 Segnali Allarme"])
+            tab_cons1, tab_cons2, tab_cons3, tab_cons4 = st.tabs(["📝 Istruzioni Critiche", "📊 Cosa NON Fare", "🚨 Segnali Allarme", "📈 Recovery Path"])
             
             with tab_cons1:
                 st.markdown("""
@@ -850,214 +1118,13 @@ elif pagina == "💡 Consiglio Finale":
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
-
-# =====================================================================
-# PAGINA 5: ML EXPLAINED
-# =====================================================================
-elif pagina == "🔮 ML Explained":
-    st.title("🔮 Machine Learning - Come Funziona")
-    
-    st.markdown("""
-    <div class='info-box'>
-    <h3>🤖 Cosa è il Machine Learning?</h3>
-    <p>È una tecnologia che <strong>impara dai dati</strong> per fare <strong>previsioni accurate</strong>.</p>
-    
-    <p><strong>Nel nostro caso:</strong> Analizziamo i tuoi 90 giorni di allenamenti per scoprire i pattern 
-    che causano infortunio, sovrallenamento o prestazioni ottimali.</p>
-    
-    <p><strong>Accuratezza del modello:</strong> <strong>87-92%</strong> (verificata su dati storici)</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    tab_ml1, tab_ml2, tab_ml3, tab_ml4 = st.tabs(["🌳 Random Forest", "📈 Linear Regression", "🎯 Logistic Regression", "📊 Metriche di Validazione"])
-    
-    with tab_ml1:
-        st.markdown("""
-        <div class='info-box'>
-        <h3>🌳 Random Forest Classifier - Predizione del Rischio</h3>
-        
-        <p><strong>Come funziona:</strong> Crea 100 "alberi decisionali" indipendenti che analizzano i tuoi dati.</p>
-        
-        <p><strong>Esempio di un albero:</strong></p>
-        <pre style='background: #f5f5f5; padding: 10px; border-radius: 5px;'>
-IF Ore_Sonno < 6 AND RPE > 7 AND FC > 155
-   THEN Rischio Infortunio = ALTO
-ELSE IF Stress_Lavoro > 7 AND Ore_Sonno < 6.5
-   THEN Rischio Infortunio = MODERATO
-ELSE
-   THEN Rischio Infortunio = BASSO
-        </pre>
-        
-        <p><strong>Come decide:</strong> Se 85 alberi su 100 votano "rischio alto" → 85% probabilità</p>
-        
-        <p><strong>Parametri analizzati:</strong></p>
-        <ul>
-        <li>📏 Distanza km</li>
-        <li>😴 Ore Sonno</li>
-        <li>🧠 Stress Lavoro (1-10)</li>
-        <li>❤️ FC Media (battiti/minuto)</li>
-        <li>💪 RPE (sforzo percepito 1-10)</li>
-        </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
-        y_train = df['Rischio Infortunio']
-        
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X_train)
-        
-        rf_model = RandomForestClassifier(n_estimators=50, random_state=42, max_depth=6)
-        rf_model.fit(X_scaled, y_train)
-        
-        features = ['Distanza', 'Sonno', 'Stress', 'FC', 'RPE']
-        importances = rf_model.feature_importances_
-        
-        df_imp = pd.DataFrame({'Feature': features, 'Importanza': importances}).sort_values('Importanza', ascending=False)
-        
-        fig_imp = px.bar(df_imp, x='Importanza', y='Feature', orientation='h', height=300,
-                        title="Importanza Relativa dei Parametri",
-                        color='Importanza', color_continuous_scale='Blues')
-        fig_imp.update_layout(xaxis_title="Importanza (%)", yaxis_title="", showlegend=False)
-        st.plotly_chart(fig_imp, use_container_width=True)
-        
-        st.markdown(f"""
-        <div class='success-box'>
-        <p><strong>📊 Risultato:</strong> Il modello Random Forest spiega come i tuoi parametri influenzano il rischio.</p>
-        <p>Il parametro più importante: <strong>{df_imp.iloc[0]['Feature']}</strong> ({df_imp.iloc[0]['Importanza']*100:.1f}%)</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab_ml2:
-        st.markdown("""
-        <div class='warning-box'>
-        <h3>📈 Linear Regression - FC vs Velocità</h3>
-        
-        <p><strong>Cosa fa:</strong> Crea una formula semplice: <strong>FC = a + b × Velocità</strong></p>
-        
-        <p><strong>Parametri trovati:</strong></p>
-        <ul>
-        <li><strong>a (intercetta):</strong> FC base (es: 85 bpm a riposo)</li>
-        <li><strong>b (slope):</strong> Aumento FC per km/h (es: +4.5 bpm)</li>
-        </ul>
-        
-        <p><strong>Esempio pratico:</strong></p>
-        <pre style='background: #f5f5f5; padding: 10px; border-radius: 5px;'>
-Velocità 10 km/h → FC = 85 + (4.5 × 10) = 130 bpm
-Velocità 12 km/h → FC = 85 + (4.5 × 12) = 139 bpm
-Velocità 14 km/h → FC = 85 + (4.5 × 14) = 148 bpm
-        </pre>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_reg = df['Velocità (km/h)'].values.reshape(-1, 1)
-        y_reg = df['FC Media'].values
-        
-        lr = LinearRegression()
-        lr.fit(X_reg, y_reg)
-        y_pred = lr.predict(X_reg)
-        r2 = lr.score(X_reg, y_reg)
-        
-        fig_lr = px.scatter(df, x='Velocità (km/h)', y='FC Media', height=400, opacity=0.6,
-                           title="Linear Regression: FC vs Velocità")
-        fig_lr.add_scatter(x=df['Velocità (km/h)'], y=y_pred, mode='lines', name='Modello Lineare',
-                          line=dict(color='red', width=3))
-        fig_lr.update_layout(xaxis_title="Velocità (km/h)", yaxis_title="FC Media (bpm)")
-        st.plotly_chart(fig_lr, use_container_width=True)
-        
-        st.markdown(f"""
-        <div class='success-box'>
-        <p><strong>📐 Equazione trovata:</strong></p>
-        <p style='font-size: 1.2em; text-align: center;'><strong>FC = {lr.intercept_:.0f} + {lr.coef_[0]:.2f} × Velocità</strong></p>
-        <p><strong>R² Score (bontà dell'adattamento):</strong> {r2:.1%}</p>
-        <p><strong>Interpretazione R²:</strong> Il modello spiega il {r2*100:.0f}% della varianza nei dati</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab_ml3:
-        st.markdown("""
-        <div class='danger-box'>
-        <h3>⚠️ Logistic Regression - Predizione Binaria</h3>
-        
-        <p><strong>Cosa fa:</strong> Trasforma una retta in una curva a forma di "S" per predizioni 0-100%.</p>
-        
-        <p><strong>Output:</strong> Non solo "sì/no", ma una <strong>probabilità</strong> (0.0 - 1.0).</p>
-        
-        <p><strong>Formula base:</strong></p>
-        <pre style='background: #f5f5f5; padding: 10px; border-radius: 5px;'>
-Probabilità Rischio = 1 / (1 + e^(-z))
-dove z = a + b₁×Sonno + b₂×Stress + b₃×RPE + ...
-        </pre>
-        
-        <p><strong>Risultato:</strong> Una probabilità continua tra 0-100% (non solo 0 o 1)</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_log = df[['Ore Sonno', 'Stress Lavoro', 'RPE']].fillna(0)
-        y_log = df['Overtraining']
-        
-        scaler_log = StandardScaler()
-        X_log_scaled = scaler_log.fit_transform(X_log)
-        
-        log_model = LogisticRegression(random_state=42, max_iter=1000)
-        log_model.fit(X_log_scaled, y_log)
-        
-        col_log1, col_log2 = st.columns(2)
-        
-        with col_log1:
-            fig_log1 = px.scatter(df, x='Stress Lavoro', y='RPE', size='Distanza (km)',
-                                 color='Overtraining', color_continuous_scale=['lightblue', 'red'],
-                                 height=350, opacity=0.7, title="Overtraining: Stress vs RPE")
-            st.plotly_chart(fig_log1, use_container_width=True)
-        
-        with col_log2:
-            fig_log2 = px.scatter(df, x='Ore Sonno', y='RPE', color='Overtraining',
-                                 color_continuous_scale=['lightblue', 'red'], height=350, 
-                                 opacity=0.7, title="Overtraining: Sonno vs RPE")
-            st.plotly_chart(fig_log2, use_container_width=True)
-    
-    with tab_ml4:
-        st.markdown("""
-        <div class='info-box'>
-        <h3>📊 Metriche di Validazione del Modello</h3>
-        
-        <p><strong>Come verifichiamo che il modello sia accurato?</strong></p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
-        y_train = df['Rischio Infortunio']
-        
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X_train)
-        
-        rf_model = RandomForestClassifier(n_estimators=50, random_state=42, max_depth=6)
-        rf_model.fit(X_scaled, y_train)
-        
-        y_pred = rf_model.predict(X_scaled)
-        
-        acc = accuracy_score(y_train, y_pred)
-        prec = precision_score(y_train, y_pred, zero_division=0)
-        rec = recall_score(y_train, y_pred, zero_division=0)
-        
-        col_met1, col_met2, col_met3, col_met4 = st.columns(4)
-        
-        col_met1.metric("✅ Accuracy", f"{acc*100:.1f}%", "Quanti corretti")
-        col_met2.metric("🎯 Precision", f"{prec*100:.1f}%", "Falsi positivi bassi")
-        col_met3.metric("🔍 Recall", f"{rec*100:.1f}%", "Catture veri positivi")
-        col_met4.metric("🧠 Sample Size", f"{len(df)}", "Giorni di dati")
-        
-        st.markdown("""
-        <div class='success-box'>
-        <p><strong>Spiegazione Metriche:</strong></p>
-        <ul>
-        <li><strong>Accuracy:</strong> Percentuale complessiva di predizioni corrette</li>
-        <li><strong>Precision:</strong> Di quelli che dice "rischio alto", quanti sono realmente a rischio (evita falsi allarmi)</li>
-        <li><strong>Recall:</strong> Di quelli veramente a rischio, quanti il modello cattura (non perdi casi gravi)</li>
-        </ul>
-        </div>
-        """, unsafe_allow_html=True)
+            
+            with tab_cons4:
+                recovery_plan = pd.DataFrame({
+                    'Giorno': ['Oggi', '+1', '+2', '+3', '+4', '+5'],
+                    'Attività': ['Riposo Total', 'Riposo + Sonno', 'Camminate Facili', 'Recovery Run', 'Easy Run', 'Ritorno Graduale'],
+                    'Durata': ['0 min', '0 min', '20 min', '20-30 min', '30-40 min', '40-50 min'],
+                    'Priorità': ['Sonno', 'Sonno', 'Movimento Leggero', 'Movimento Leggero', 'Rientro', 'Valutare']
+                })
+                
+                st.dataframe(recovery_plan, use_container_width=True, hide_index=True)
