@@ -405,80 +405,120 @@ elif pagina == "📊 KPI Dashboard":
         prob_rischio = rf_model.predict_proba(scenario)[0][1] * 100
         
         # WIDGET PRINCIPALI CON GAUGE PIU' BELLI
-        st.subheader("🎯 Valutazione Odierna")
+        st.subheader("🎯 Valutazione Odierna - KPI Principali")
         
         col_kpi1, col_kpi2, col_kpi3 = st.columns(3)
         
+        # KPI 1: Risk - con colore dinamico
         with col_kpi1:
+            if prob_rischio < 25:
+                risk_color = "#34a853"
+                risk_status = "SICURO"
+            elif prob_rischio < 60:
+                risk_color = "#fbbc04"
+                risk_status = "MODERATO"
+            else:
+                risk_color = "#ea4335"
+                risk_status = "CRITICO"
+            
             fig_risk = go.Figure(go.Indicator(
-                mode="gauge+number+delta",
+                mode="gauge+number",
                 value=prob_rischio,
                 title="Rischio Infortunio",
                 domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={
-                    'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': 'darkblue'},
-                    'bar': {'color': "darkblue", 'thickness': 0.7},
-                    'bgcolor': "white",
-                    'borderwidth': 2,
-                    'bordercolor': "gray",
+                    'axis': {'range': [0, 100], 'tickwidth': 2, 'tickcolor': 'darkblue'},
+                    'bar': {'color': risk_color, 'thickness': 0.8},
+                    'bgcolor': "#f0f0f0",
+                    'borderwidth': 3,
+                    'bordercolor': risk_color,
                     'steps': [
-                        {'range': [0, 25], 'color': "#34a853"},
-                        {'range': [25, 60], 'color': "#fbbc04"},
-                        {'range': [60, 100], 'color': "#ea4335"}
+                        {'range': [0, 25], 'color': "#e6f4ea"},
+                        {'range': [25, 60], 'color': "#fef7e0"},
+                        {'range': [60, 100], 'color': "#fce8e6"}
                     ],
                     'threshold': {
-                        'line': {'color': "darkred", 'width': 4},
+                        'line': {'color': risk_color, 'width': 4},
                         'thickness': 0.75,
                         'value': 60
                     }
                 },
-                number={'suffix': "%", 'font': {'size': 24}},
+                number={'suffix': "%", 'font': {'size': 28, 'color': risk_color}},
             ))
-            fig_risk.update_layout(height=320, margin=dict(l=20, r=20, t=50, b=20), paper_bgcolor="#f8f9fa")
+            fig_risk.update_layout(
+                height=350,
+                margin=dict(l=10, r=10, t=60, b=10),
+                paper_bgcolor="#f8f9fa",
+                font=dict(color="#1a73e8", size=14)
+            )
             st.plotly_chart(fig_risk, use_container_width=True)
+            st.markdown(f"<p style='text-align: center; font-size: 1.1em; color: {risk_color};'><strong>{risk_status}</strong></p>", unsafe_allow_html=True)
         
+        # KPI 2: Recovery Score - con colore dinamico
         with col_kpi2:
             recovery_score = r['recovery_score']
+            if recovery_score < 40:
+                rec_color = "#ea4335"
+                rec_status = "PESSIMO"
+            elif recovery_score < 75:
+                rec_color = "#fbbc04"
+                rec_status = "MODERATO"
+            else:
+                rec_color = "#34a853"
+                rec_status = "OTTIMALE"
+            
             fig_recovery = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=recovery_score,
                 title="Recovery Score",
                 domain={'x': [0, 1], 'y': [0, 1]},
                 gauge={
-                    'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': 'darkgreen'},
-                    'bar': {'color': "darkgreen", 'thickness': 0.7},
-                    'bgcolor': "white",
-                    'borderwidth': 2,
-                    'bordercolor': "gray",
+                    'axis': {'range': [0, 100], 'tickwidth': 2, 'tickcolor': 'darkgreen'},
+                    'bar': {'color': rec_color, 'thickness': 0.8},
+                    'bgcolor': "#f0f0f0",
+                    'borderwidth': 3,
+                    'bordercolor': rec_color,
                     'steps': [
-                        {'range': [0, 40], 'color': "#ea4335"},
-                        {'range': [40, 75], 'color': "#fbbc04"},
-                        {'range': [75, 100], 'color': "#34a853"}
+                        {'range': [0, 40], 'color': "#fce8e6"},
+                        {'range': [40, 75], 'color': "#fef7e0"},
+                        {'range': [75, 100], 'color': "#e6f4ea"}
                     ]
                 },
-                number={'suffix': "%", 'font': {'size': 24}},
+                number={'suffix': "%", 'font': {'size': 28, 'color': rec_color}},
             ))
-            fig_recovery.update_layout(height=320, margin=dict(l=20, r=20, t=50, b=20), paper_bgcolor="#f8f9fa")
-            st.plotly_chart(fig_recovery, use_container_width=True)
-        
-        with col_kpi3:
-            sma_valore = sma
-            sma_color = "#34a853" if sma < 10 else "#fbbc04" if sma < 15 else "#ea4335"
-            fig_sma = go.Figure(go.Indicator(
-                mode="number+delta",
-                value=sma_valore,
-                title="SMA Score",
-                domain={'x': [0, 1], 'y': [0, 1]},
-                number={'valueformat': '.1f', 'font': {'size': 48}, 'prefix': ''},
-                delta={'reference': 12, 'relative': False, 'font': {'size': 16}}
-            ))
-            fig_sma.update_layout(
-                height=320,
-                margin=dict(l=20, r=20, t=50, b=20),
+            fig_recovery.update_layout(
+                height=350,
+                margin=dict(l=10, r=10, t=60, b=10),
                 paper_bgcolor="#f8f9fa",
-                font=dict(color=sma_color, size=24)
+                font=dict(color="#34a853", size=14)
             )
-            st.plotly_chart(fig_sma, use_container_width=True)
+            st.plotly_chart(fig_recovery, use_container_width=True)
+            st.markdown(f"<p style='text-align: center; font-size: 1.1em; color: {rec_color};'><strong>{rec_status}</strong></p>", unsafe_allow_html=True)
+        
+        # KPI 3: SMA Score - con badge
+        with col_kpi3:
+            sma_value = sma
+            if sma_value < 10:
+                sma_color = "#34a853"
+                sma_emoji = "✅"
+                sma_status = "BILANCIATO"
+            elif sma_value < 15:
+                sma_color = "#fbbc04"
+                sma_emoji = "⚠️"
+                sma_status = "MODERATO"
+            else:
+                sma_color = "#ea4335"
+                sma_emoji = "❌"
+                sma_status = "SQUILIBRATO"
+            
+            st.markdown(f"""
+            <div style='background: {sma_color}15; border: 3px solid {sma_color}; padding: 40px 20px; border-radius: 12px; text-align: center;'>
+            <p style='font-size: 3.5em; margin: 0; color: {sma_color};'>{sma_emoji}</p>
+            <p style='font-size: 1.8em; font-weight: bold; color: {sma_color}; margin: 10px 0;'>{sma_value:.1f}</p>
+            <p style='font-size: 1.1em; color: #666; margin: 5px 0;'><strong>SMA Score</strong></p>
+            <p style='font-size: 0.95em; color: {sma_color}; margin-top: 15px;'>{sma_status}</p>
+            </div>
+            """, unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -583,7 +623,7 @@ elif pagina == "🔮 ML Explained":
     </div>
     """, unsafe_allow_html=True)
     
-    tab_ml1, tab_ml2, tab_ml3, tab_ml4 = st.tabs(["🌳 Random Forest", "📈 Feature Importance", "🔬 Confusione Matrix", "📊 Metriche di Validazione"])
+    tab_ml1, tab_ml2, tab_ml3 = st.tabs(["🌳 Random Forest", "🔬 Model Performance", "📚 Come Leggerlo"])
     
     with tab_ml1:
         st.markdown("""
@@ -614,63 +654,8 @@ ELSE
         </ul>
         </div>
         """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
-        y_train = df['Rischio Infortunio']
-        
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X_train)
-        
-        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
-        rf_model.fit(X_scaled, y_train)
-        
-        st.markdown("<p style='text-align: center; font-size: 1.2em;'><strong>✅ Modello Addestrato su 90 giorni di dati</strong></p>", unsafe_allow_html=True)
     
     with tab_ml2:
-        st.markdown("""
-        <div class='info-box'>
-        <h3>📊 Feature Importance - Quali Parametri Contano Più?</h3>
-        <p>Ogni albero nel Random Forest aiuta a classificare quali fattori hanno più peso nelle previsioni.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
-        y_train = df['Rischio Infortunio']
-        
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X_train)
-        
-        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
-        rf_model.fit(X_scaled, y_train)
-        
-        features = ['Distanza', 'Sonno', 'Stress', 'FC Media', 'RPE']
-        importances = rf_model.feature_importances_
-        
-        df_imp = pd.DataFrame({'Feature': features, 'Importanza': importances}).sort_values('Importanza', ascending=True)
-        
-        fig_imp = px.barh(df_imp, x='Importanza', y='Feature', height=350,
-                        title="Importanza Relativa dei Parametri",
-                        color='Importanza', color_continuous_scale='Blues')
-        fig_imp.update_layout(xaxis_title="Importanza (%)", yaxis_title="", showlegend=False)
-        st.plotly_chart(fig_imp, use_container_width=True)
-        
-        st.markdown(f"""
-        <div class='success-box'>
-        <p><strong>📊 Risultato:</strong> Il parametro più importante: <strong>{df_imp.iloc[-1]['Feature']}</strong> ({df_imp.iloc[-1]['Importanza']*100:.1f}%)</p>
-        <p>Questo significa che questo fattore influenza più di tutti gli altri le tue probabilità di infortunio.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab_ml3:
-        st.markdown("""
-        <div class='warning-box'>
-        <h3>🔬 Confusion Matrix - Accuratezza del Modello</h3>
-        <p>Mostra come il modello classifica i casi: quanti correttamente predetti vs quanti sbagliati.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
         df = st.session_state.dati
         X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
         y_train = df['Rischio Infortunio']
@@ -684,76 +669,94 @@ ELSE
         y_pred = rf_model.predict(X_scaled)
         cm = confusion_matrix(y_train, y_pred)
         
-        fig_cm = go.Figure(data=go.Heatmap(
-            z=cm,
-            x=['Predetto: Sicuro', 'Predetto: Rischio'],
-            y=['Reale: Sicuro', 'Reale: Rischio'],
-            colorscale='Blues',
-            text=cm,
-            texttemplate='%{text}',
-            textfont={"size": 16}
-        ))
-        fig_cm.update_layout(
-            title="Confusion Matrix - Accuratezza Previsioni",
-            xaxis_title="Previsione Modello",
-            yaxis_title="Realtà",
-            height=400
-        )
-        st.plotly_chart(fig_cm, use_container_width=True)
-        
-        st.markdown(f"""
-        <div class='success-box'>
-        <p><strong>Interpretazione:</strong></p>
-        <ul>
-        <li><strong>Alto a sinistra ({cm[0,0]}):</strong> Giorni REALMENTE sicuri, predetti CORRETTAMENTE come sicuri ✅</li>
-        <li><strong>Alto a destra ({cm[0,1]}):</strong> Giorni REALMENTE sicuri, ma predetti come rischio (falso allarme) ⚠️</li>
-        <li><strong>Basso a sinistra ({cm[1,0]}):</strong> Giorni REALMENTE a rischio, ma predetti come sicuri (pericoloso!) 🔴</li>
-        <li><strong>Basso a destra ({cm[1,1]}):</strong> Giorni REALMENTE a rischio, predetti CORRETTAMENTE ✅</li>
-        </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with tab_ml4:
-        st.markdown("""
-        <div class='info-box'>
-        <h3>📊 Metriche di Validazione del Modello</h3>
-        
-        <p><strong>Come verifichiamo che il modello sia accurato?</strong></p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        df = st.session_state.dati
-        X_train = df[['Distanza (km)', 'Ore Sonno', 'Stress Lavoro', 'FC Media', 'RPE']].fillna(0)
-        y_train = df['Rischio Infortunio']
-        
-        scaler = StandardScaler()
-        X_scaled = scaler.fit_transform(X_train)
-        
-        rf_model = RandomForestClassifier(n_estimators=100, random_state=42, max_depth=8)
-        rf_model.fit(X_scaled, y_train)
-        
-        y_pred = rf_model.predict(X_scaled)
-        
+        # Performance metrics
         acc = accuracy_score(y_train, y_pred)
         prec = precision_score(y_train, y_pred, zero_division=0)
         rec = recall_score(y_train, y_pred, zero_division=0)
         
         col_met1, col_met2, col_met3, col_met4 = st.columns(4)
         
-        col_met1.metric("✅ Accuracy", f"{acc*100:.1f}%", "Quanti corretti")
-        col_met2.metric("🎯 Precision", f"{prec*100:.1f}%", "Falsi positivi bassi")
-        col_met3.metric("🔍 Recall", f"{rec*100:.1f}%", "Catture veri positivi")
-        col_met4.metric("🧠 Sample Size", f"{len(df)}", "Giorni di dati")
+        col_met1.metric("✅ Accuracy", f"{acc*100:.1f}%", "Predizioni corrette")
+        col_met2.metric("🎯 Precision", f"{prec*100:.1f}%", "Falsi allarmi bassi")
+        col_met3.metric("🔍 Recall", f"{rec*100:.1f}%", "Cattura casi gravi")
+        col_met4.metric("📊 Training Data", f"{len(df)} giorni", "Periodo analizzato")
+        
+        st.markdown("---")
+        
+        # Confusion Matrix
+        col_cm1, col_cm2 = st.columns([1.5, 1])
+        
+        with col_cm1:
+            st.markdown("**Confusion Matrix - Accuracy Previsioni**")
+            fig_cm = go.Figure(data=go.Heatmap(
+                z=cm,
+                x=['Predetto: Sicuro', 'Predetto: Rischio'],
+                y=['Reale: Sicuro', 'Reale: Rischio'],
+                colorscale='Blues',
+                text=cm,
+                texttemplate='%{text}',
+                textfont={"size": 18}
+            ))
+            fig_cm.update_layout(
+                title="",
+                xaxis_title="Previsione Modello",
+                yaxis_title="Realtà",
+                height=350
+            )
+            st.plotly_chart(fig_cm, use_container_width=True)
+        
+        with col_cm2:
+            st.markdown("""
+            <div class='success-box' style='height: 350px; display: flex; flex-direction: column; justify-content: center;'>
+            <p><strong>Interpretazione:</strong></p>
+            <ul style='font-size: 0.9em; margin: 10px 0;'>
+            <li><strong>Alto-Sx ({}):</strong> Veri Negativi ✅</li>
+            <li><strong>Alto-Dx ({}):</strong> Falsi Positivi ⚠️</li>
+            <li><strong>Basso-Sx ({}):</strong> Falsi Negativi 🔴</li>
+            <li><strong>Basso-Dx ({}):</strong> Veri Positivi ✅</li>
+            </ul>
+            </div>
+            """.format(cm[0,0], cm[0,1], cm[1,0], cm[1,1]), unsafe_allow_html=True)
         
         st.markdown("""
-        <div class='success-box'>
+        <div class='info-box'>
         <p><strong>Spiegazione Metriche:</strong></p>
         <ul>
-        <li><strong>Accuracy:</strong> Percentuale complessiva di predizioni corrette</li>
-        <li><strong>Precision:</strong> Di quelli che dice "rischio alto", quanti sono realmente a rischio (evita falsi allarmi)</li>
-        <li><strong>Recall:</strong> Di quelli veramente a rischio, quanti il modello cattura (non perdi casi gravi)</li>
-        <li><strong>Sample Size:</strong> Numero di giorni usati per addestrare il modello</li>
+        <li><strong>Accuracy:</strong> Percentuale complessiva di predizioni corrette su tutti i casi</li>
+        <li><strong>Precision:</strong> Di quelli che predice "a rischio", quanti sono realmente a rischio (evita falsi allarmi)</li>
+        <li><strong>Recall:</strong> Di quelli veramente a rischio, quanti il modello cattura (importante: non deve perderli!)</li>
         </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with tab_ml3:
+        st.markdown("""
+        <div class='warning-box'>
+        <h3>📚 Come Leggere i Risultati del Modello</h3>
+        
+        <p><strong>Quando il modello dice "Rischio: 75%":</strong></p>
+        <ul>
+        <li>✓ Ha analizzato i tuoi parametri attuali (sonno, stress, RPE, FC, distanza)</li>
+        <li>✓ Ha confrontato con i 90 giorni precedenti</li>
+        <li>✓ Ha calcolato: "In situazioni simili al passato, il 75% dei giorni hanno avuto problemi"</li>
+        <li>✓ Non è una certezza, ma una probabilità basata su pattern reali</li>
+        </ul>
+        
+        <hr>
+        
+        <p><strong>Esempio pratico:</strong></p>
+        <ul>
+        <li>Hai dormito 5h (poco) ❌</li>
+        <li>Stress al lavoro: 8/10 (alto) ❌</li>
+        <li>RPE previsto: 8/10 (intenso) ❌</li>
+        <li>FC a riposo: 75 bpm (normale)</li>
+        </ul>
+        <p style='font-weight: bold; color: #ea4335;'>→ Il modello predice: RISCHIO 85%</p>
+        
+        <hr>
+        
+        <p><strong>Cosa significa?</strong> Negli ultimi 90 giorni, quando hai avuto questa combinazione di fattori, 
+        il tuo corpo era effettivamente a rischio nel 85% dei casi. È un segnale che dovresti ascoltare.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -785,59 +788,79 @@ elif pagina == "💡 Consiglio Finale":
         
         sma = (r['stress_lavoro'] * r['rpe_previsto']) / r['ore_sonno'] if r['ore_sonno'] > 0 else 0
         
+        # Calcolo dello stato
+        if prob_rischio < 25:
+            colore_stato = "green"
+            stato_testo = "OTTIMALE"
+            emoji_stato = "🟢"
+            consiglio_macro = "ALLENAMENTO INTENSO"
+        elif prob_rischio < 60:
+            colore_stato = "orange"
+            stato_testo = "MODERATO"
+            emoji_stato = "🟡"
+            consiglio_macro = "RECUPERO ATTIVO"
+        else:
+            colore_stato = "red"
+            stato_testo = "CRITICO"
+            emoji_stato = "🔴"
+            consiglio_macro = "RIPOSO TOTALE"
+        
         # STATO ATTUALE
-        st.subheader("🎯 Il Tuo Stato Oggi")
+        st.subheader("🎯 Il Tuo Stato Oggi - Analisi Dettagliata")
         
         col_stato1, col_stato2, col_stato3 = st.columns(3)
         
         with col_stato1:
-            if prob_rischio < 25:
-                colore_stato = "green"
-                stato_testo = "OTTIMALE"
-                emoji_stato = "🟢"
-            elif prob_rischio < 60:
-                colore_stato = "orange"
-                stato_testo = "MODERATO"
-                emoji_stato = "🟡"
-            else:
-                colore_stato = "red"
-                stato_testo = "CRITICO"
-                emoji_stato = "🔴"
-            
             st.markdown(f"""
-            <div style='background: {colore_stato}22; border: 3px solid {colore_stato}; padding: 25px; border-radius: 10px; text-align: center;'>
-            <h2 style='color: {colore_stato}; margin: 0;'>{emoji_stato} {stato_testo}</h2>
-            <p style='margin: 15px 0; font-size: 1.1em;'><strong>{prob_rischio:.1f}%</strong> Rischio Infortunio</p>
+            <div style='background: {colore_stato}22; border: 3px solid {colore_stato}; padding: 30px; border-radius: 12px; text-align: center;'>
+            <h2 style='color: {colore_stato}; margin: 0; font-size: 3em;'>{emoji_stato}</h2>
+            <p style='margin: 15px 0; font-size: 1.3em;'><strong>{stato_testo}</strong></p>
+            <p style='margin: 10px 0; font-size: 1.4em; font-weight: bold; color: {colore_stato};'>{prob_rischio:.1f}%</p>
+            <p style='margin: 0; font-size: 0.9em; color: #666;'>Rischio Infortunio</p>
             </div>
             """, unsafe_allow_html=True)
         
         with col_stato2:
             sonno_eval = "✅ Ottimo" if r['ore_sonno'] >= 7 else "⚠️ Insufficiente" if r['ore_sonno'] < 6.5 else "🟡 Accettabile"
             stress_eval = "✅ Basso" if r['stress_lavoro'] <= 4 else "⚠️ Alto" if r['stress_lavoro'] >= 7 else "🟡 Moderato"
+            rpe_eval = "✅ Facile" if r['rpe_previsto'] <= 3 else "🟡 Moderato" if r['rpe_previsto'] <= 6 else "🔴 Intenso"
             
             st.markdown(f"""
-            <div style='background: #e8f0fe; border: 2px solid #1a73e8; padding: 25px; border-radius: 10px;'>
-            <h3 style='color: #1a73e8; margin-top: 0;'>📊 Parametri</h3>
-            <p style='margin: 10px 0;'><strong>😴 Sonno:</strong> {r['ore_sonno']:.1f}h {sonno_eval}</p>
-            <p style='margin: 10px 0;'><strong>🧠 Stress:</strong> {r['stress_lavoro']}/10 {stress_eval}</p>
-            <p style='margin: 10px 0;'><strong>⚡ RPE:</strong> {r['rpe_previsto']}/10</p>
-            <p style='margin: 10px 0;'><strong>📈 Recovery:</strong> {r['recovery_score']:.0f}%</p>
+            <div style='background: #e8f0fe; border: 2px solid #1a73e8; padding: 25px; border-radius: 12px;'>
+            <h3 style='color: #1a73e8; margin-top: 0;'>📊 I Tuoi Parametri</h3>
+            <p style='margin: 12px 0; border-bottom: 1px solid #ddd; padding-bottom: 10px;'>
+            <strong>😴 Sonno:</strong> {r['ore_sonno']:.1f}h <br>
+            <span style='font-size: 0.9em; color: #666;'>{sonno_eval}</span>
+            </p>
+            <p style='margin: 12px 0; border-bottom: 1px solid #ddd; padding-bottom: 10px;'>
+            <strong>🧠 Stress Lavoro:</strong> {r['stress_lavoro']}/10 <br>
+            <span style='font-size: 0.9em; color: #666;'>{stress_eval}</span>
+            </p>
+            <p style='margin: 12px 0; border-bottom: 1px solid #ddd; padding-bottom: 10px;'>
+            <strong>⚡ RPE Previsto:</strong> {r['rpe_previsto']}/10 <br>
+            <span style='font-size: 0.9em; color: #666;'>{rpe_eval}</span>
+            </p>
+            <p style='margin: 12px 0;'>
+            <strong>📈 Recovery Score:</strong> {r['recovery_score']:.0f}%
+            </p>
             </div>
             """, unsafe_allow_html=True)
         
         with col_stato3:
             st.markdown(f"""
-            <div style='background: #f0f8ff; border: 2px solid #34a853; padding: 25px; border-radius: 10px;'>
-            <h3 style='color: #34a853; margin-top: 0;'>🎯 Obiettivi</h3>
-            <p style='margin: 10px 0;'><strong>Oggi:</strong><br>{r['obj_oggi']}</p>
-            <p style='margin: 10px 0;'><strong>L.Termine:</strong><br>{r['obj_lt']}</p>
+            <div style='background: #f0f8ff; border: 2px solid #34a853; padding: 25px; border-radius: 12px;'>
+            <h3 style='color: #34a853; margin-top: 0;'>🎯 I Tuoi Obiettivi</h3>
+            <p style='margin: 15px 0; font-weight: bold; color: #1a73e8; font-size: 0.95em;'>📅 Oggi:</p>
+            <p style='margin: 0 0 15px 0; color: #333;'><em>{r['obj_oggi'] if r['obj_oggi'] else "Non specificato"}</em></p>
+            <p style='margin: 15px 0; font-weight: bold; color: #1a73e8; font-size: 0.95em;'>🏁 Lungo Termine:</p>
+            <p style='margin: 0; color: #333;'><em>{r['obj_lt'] if r['obj_lt'] else "Non specificato"}</em></p>
             </div>
             """, unsafe_allow_html=True)
         
         st.markdown("---")
         
-        # RACCOMANDAZIONI DETTAGLIATE CON GRAFICI MULTIPLI
-        st.subheader("📋 Piano di Allenamento Consigliato")
+        # RACCOMANDAZIONI DETTAGLIATE
+        st.subheader(f"💡 Consiglio: {consiglio_macro}")
         
         if prob_rischio < 25:
             st.markdown("""
@@ -847,7 +870,7 @@ elif pagina == "💡 Consiglio Finale":
             </div>
             """, unsafe_allow_html=True)
             
-            tab_cons1, tab_cons2, tab_cons3, tab_cons4, tab_cons5 = st.tabs(["📝 Piano Dettagliato", "📊 Zone FC", "⚡ Grafici Allenamento", "💪 Progressione", "💡 Consigli Extra"])
+            tab_cons1, tab_cons2, tab_cons3, tab_cons4, tab_cons5 = st.tabs(["📝 Piano", "📊 Zone FC", "⚡ Grafici", "💪 Progressione", "🔧 Tips"])
             
             with tab_cons1:
                 st.markdown("""
@@ -879,129 +902,116 @@ elif pagina == "💡 Consiglio Finale":
                 col_z1, col_z2 = st.columns(2)
                 
                 with col_z1:
-                    zones = ['Z1\n(Recupero)\n60-70%', 'Z2\n(Base)\n70-80%', 'Z3\n(Sostenuto)\n80-90%', 'Z4-Z5\n(Intenso)\n90-100%']
+                    zones = ['Z1\n(60-70%)', 'Z2\n(70-80%)', 'Z3\n(80-90%)', 'Z4-Z5\n(90-100%)']
                     valori = [15, 0, 20, 55]
-                    colori = ['#34a853', '#fbbc04', '#ff9800', '#ea4335']
+                    colori_zone = ['#34a853', '#fbbc04', '#ff9800', '#ea4335']
                     
-                    fig_zones = px.pie(values=valori, names=zones, color_discrete_sequence=colori,
-                                      title="Distribuzione Tempo per Zone FC",
-                                      labels={'value': 'Minuti'})
-                    fig_zones.update_traces(textposition='inside', textinfo='label+percent')
+                    fig_zones = px.pie(values=valori, names=zones, color_discrete_sequence=colori_zone,
+                                      title="Distribuzione Ideale Oggi")
+                    fig_zones.update_traces(textposition='inside', textinfo='label+percent', textfont=dict(size=12))
                     st.plotly_chart(fig_zones, use_container_width=True)
                 
                 with col_z2:
                     fc_max = 200
-                    fc_zones_data = pd.DataFrame({
+                    zone_table = pd.DataFrame({
                         'Zona': ['Z1', 'Z2', 'Z3', 'Z4', 'Z5'],
-                        'Min BPM': [int(fc_max*0.6), int(fc_max*0.7), int(fc_max*0.8), int(fc_max*0.9), int(fc_max*0.95)],
-                        'Max BPM': [int(fc_max*0.7), int(fc_max*0.8), int(fc_max*0.9), int(fc_max*0.95), fc_max],
-                        'Intensità': ['Molto Facile', 'Facile', 'Moderato', 'Difficile', 'Massimale']
+                        'BPM': [f"{int(fc_max*0.65)}-{int(fc_max*0.75)}", 
+                               f"{int(fc_max*0.75)}-{int(fc_max*0.85)}", 
+                               f"{int(fc_max*0.85)}-{int(fc_max*0.92)}", 
+                               f"{int(fc_max*0.92)}-{int(fc_max*0.98)}", 
+                               f"{int(fc_max*0.98)}-{fc_max}"],
+                        'Tipo': ['Recupero', 'Base', 'Moderato', 'Difficile', 'Massimale']
                     })
-                    
-                    st.dataframe(fc_zones_data, use_container_width=True, hide_index=True)
+                    st.dataframe(zone_table, use_container_width=True, hide_index=True)
             
             with tab_cons3:
                 col_g1, col_g2 = st.columns(2)
                 
                 with col_g1:
-                    rpe_esempio = np.array([2, 3, 4, 5, 6, 7, 8, 8.5, 9, 9.5])
-                    fc_esempio = np.array([110, 120, 130, 140, 150, 160, 170, 175, 180, 185])
+                    rpe_range = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                    fc_range = np.array([100, 110, 120, 130, 140, 150, 160, 170, 180, 190])
                     
-                    fig_rpe = px.scatter(x=rpe_esempio, y=fc_esempio, 
-                                        labels={'x': 'RPE (1-10)', 'y': 'FC Stimata (bpm)'},
-                                        title="RPE vs FC Stimata",
-                                        height=350)
-                    fig_rpe.add_scatter(x=rpe_esempio, y=fc_esempio, mode='lines', name='Tendenza', 
-                                       line=dict(color='red', width=2))
+                    fig_rpe = px.line(x=rpe_range, y=fc_range, 
+                                     labels={'x': 'RPE (1-10)', 'y': 'FC Stimata (bpm)'},
+                                     title="RPE vs FC",
+                                     height=350,
+                                     markers=True)
+                    fig_rpe.update_traces(marker=dict(size=10), line=dict(color='#1a73e8', width=3))
+                    fig_rpe.update_layout(hovermode='x unified')
                     st.plotly_chart(fig_rpe, use_container_width=True)
                 
                 with col_g2:
-                    velocita_km = np.array([8, 9, 10, 11, 12, 13, 14, 15, 16])
-                    carico = velocita_km * 8  # proxy di carico
-                    colori_vel = ['#34a853' if v < 10 else '#fbbc04' if v < 12 else '#ff9800' if v < 14 else '#ea4335' for v in velocita_km]
+                    velocita_range = np.array([8, 9, 10, 11, 12, 13, 14, 15, 16])
+                    intensita = velocita_range * 10
                     
-                    fig_vel = px.bar(x=velocita_km, y=carico, 
+                    fig_vel = px.bar(x=velocita_range, y=intensita,
                                     labels={'x': 'Velocità (km/h)', 'y': 'Carico Relativo'},
                                     title="Carico per Velocità",
                                     height=350,
-                                    color=colori_vel)
+                                    color=intensita,
+                                    color_continuous_scale='Reds')
                     st.plotly_chart(fig_vel, use_container_width=True)
             
             with tab_cons4:
-                st.markdown("""
-                <div class='info-box'>
-                <h3>📈 Progressione Consigliata (2 Settimane)</h3>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                progressione_data = pd.DataFrame({
+                prog_data = pd.DataFrame({
                     'Giorno': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
-                    'Tipo': ['Easy Run', 'Intervalli', 'Easy Run', 'Lungo', 'Recupero', 'Tempo Run', 'Easy Run', 
-                            'Facile', 'Intervalli+', 'Easy Run', 'Lungo+', 'Recupero', 'Tempo Run+', 'Easy Run'],
-                    'Distanza': ['8 km', '10 km', '8 km', '14 km', '6 km', '12 km', '8 km',
-                                '8 km', '11 km', '8 km', '16 km', '6 km', '13 km', '8 km'],
+                    'Tipo': ['Easy', 'Intervalli', 'Easy', 'Lungo', 'Riposo', 'Tempo', 'Easy', 
+                            'Easy', 'Intervalli+', 'Easy', 'Lungo+', 'Riposo', 'Tempo+', 'Easy'],
+                    'Distanza': ['8', '10', '8', '14', '6', '12', '8', '8', '11', '8', '16', '6', '13', '8'],
                     'RPE': [3, 8, 3, 6, 2, 7, 3, 3, 8.5, 3, 6.5, 2, 7.5, 3],
-                    'Nota': ['Recupero', 'Spinta Max', 'Recupero', 'Lungo', 'Scarico', 'Soglia', 'Recupero',
-                            'Prep', 'Intenso', 'Recupero', 'Lungo+volume', 'Scarico', 'Soglia+', 'Recupero']
                 })
                 
-                st.dataframe(progressione_data, use_container_width=True, hide_index=True)
+                st.markdown("**Piano 14 Giorni Progressivo**")
+                st.dataframe(prog_data, use_container_width=True, hide_index=True)
             
             with tab_cons5:
                 st.markdown("""
                 <div class='warning-box'>
-                <h3>🔋 Cosa Fare Dopo l'Allenamento</h3>
+                <h3>🔧 Tips Post-Allenamento</h3>
                 <ul>
-                <li><strong>Entro 30 minuti:</strong> Proteine + carboidrati (es: banana + yogurt proteico)</li>
-                <li><strong>Ore 1-2:</strong> Pasto completo equilibrato (70% carbs, 20% proteine, 10% grassi)</li>
-                <li><strong>Idratazione:</strong> 500ml acqua + elettroliti per 500 kcal bruciate</li>
-                <li><strong>Crioterapia (opzionale):</strong> 10 min bagno freddo se molto affaticato</li>
-                <li><strong>Sonno:</strong> Vai a letto 1h prima del solito stasera</li>
+                <li><strong>⏱️ Entro 30 min:</strong> Proteine + carboidrati (banana + yogurt)</li>
+                <li><strong>🍽️ 1-2 ore:</strong> Pasto completo (70% carbs, 20% proteine, 10% grassi)</li>
+                <li><strong>💧 Idratazione:</strong> 500ml acqua + elettroliti per 500 kcal</li>
+                <li><strong>❄️ Crioterapia:</strong> 10 min bagno freddo se affaticato</li>
+                <li><strong>😴 Sonno:</strong> Vai a letto 1h prima stasera</li>
                 </ul>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown("""
-                <div class='danger-box'>
-                <h3>⚠️ Prossimo Allenamento</h3>
-                <p><strong>Domani:</strong> Easy run di 6-8 km a ritmo conversativo (Z1-Z2)</p>
-                <p><strong>Dopodomani:</strong> Riposo attivo o cross-training leggero</p>
-                <p><strong>Giorno 3:</strong> Allenamento moderato (Fartlek o Long Run facile)</p>
                 </div>
                 """, unsafe_allow_html=True)
         
         elif prob_rischio < 60:
-            st.markdown("""
+            st.markdown(f"""
             <div class='warning-box'>
             <h2>🟡 RECUPERO ATTIVO CONSIGLIATO</h2>
-            <p>Il corpo ha bisogno di <strong>rigenerazione</strong>. Evita l'intenso oggi.</p>
+            <p>Il corpo ha bisogno di <strong>rigenerazione</strong>. Stai mostrando segni di affaticamento: 
+            <strong>Sonno {r['ore_sonno']:.1f}h</strong>, <strong>Stress {r['stress_lavoro']}/10</strong>.</p>
             </div>
             """, unsafe_allow_html=True)
             
-            tab_cons1, tab_cons2, tab_cons3, tab_cons4 = st.tabs(["📝 Piano Dettagliato", "📊 Zone FC", "💡 Recupero Focus", "📈 Trend"])
+            tab_cons1, tab_cons2, tab_cons3, tab_cons4 = st.tabs(["📝 Piano", "📊 Zone FC", "💤 Recupero", "📈 Trend"])
             
             with tab_cons1:
                 st.markdown("""
                 <div class='warning-box'>
-                <h3>🐌 Tipo di Allenamento Consigliato</h3>
+                <h3>🐌 Allenamento Consigliato (Easy Day)</h3>
                 <ul style='font-size: 1.1em;'>
                 <li><strong>✅ Easy Run:</strong> Ritmo conversativo (puoi parlare normalmente)</li>
                 <li><strong>✅ Long Run Facile:</strong> 12-18 km a bassa intensità (60-70% FC Max)</li>
-                <li><strong>✅ Fartlek Leggero:</strong> Solo variazioni di ritmo lievi (no scatti)</li>
+                <li><strong>✅ Fartlek Leggero:</strong> Solo variazioni lievi (NO scatti)</li>
                 <li><strong>✅ Recovery Run:</strong> Pura rigenerazione 5-8 km</li>
                 <li><strong>✅ Cross-Training:</strong> Nuoto, ciclismo leggero 30-45 min</li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
                 
-                st.markdown("""
+                st.markdown(f"""
                 <div class='info-box'>
                 <h3>📐 Parametri Rigorosi</h3>
                 <ul>
-                <li><strong>FC Target:</strong> 60-70% del massimale (~120-140 bpm)</li>
+                <li><strong>FC Target:</strong> 60-70% FC Max (~120-140 bpm)</li>
                 <li><strong>RPE:</strong> Massimo 3-4/10 (molto facile)</li>
-                <li><strong>Velocità:</strong> Circa 40-50 secondi al km più lentamente rispetto al ritmo base</li>
-                <li><strong>Respirazione:</strong> Sempre controllata (puoi conversare facilmente)</li>
+                <li><strong>Velocità:</strong> 40-50 sec/km più lenta del solito</li>
+                <li><strong>Respirazione:</strong> Controllata - puoi conversare</li>
+                <li><strong>Durata consigliata:</strong> 30-45 minuti MAX</li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1009,50 +1019,52 @@ elif pagina == "💡 Consiglio Finale":
             with tab_cons2:
                 fig_recovery = go.Figure()
                 
-                zones_rec = ['Z1\n(Recupero)\n60-70%', 'Z2\n(Base)\n70-80%']
+                zones_rec = ['Z1\n(60-70%)', 'Z2\n(70-80%)']
                 valori_rec = [70, 30]
                 colori_rec = ['#34a853', '#fbbc04']
                 
                 fig_recovery = px.pie(values=valori_rec, names=zones_rec, color_discrete_sequence=colori_rec,
-                                     title="Distribuzione Ideale - Giorno di Recupero",
-                                     labels={'value': 'Minuti'})
-                fig_recovery.update_traces(textposition='inside', textinfo='label+percent')
+                                     title="Distribuzione Zone - Giorno di Recupero")
+                fig_recovery.update_traces(textposition='inside', textinfo='label+percent', textfont=dict(size=14))
                 st.plotly_chart(fig_recovery, use_container_width=True)
             
             with tab_cons3:
-                st.markdown("""
+                st.markdown(f"""
                 <div class='success-box'>
-                <h3>💤 Priorità per le Prossime 24-48 Ore</h3>
+                <h3>💤 Priorità Recupero (24-48h)</h3>
                 <ul>
-                <li><strong>🛏️ Sonno:</strong> Dormi 8-9 ore stasera (priorità massima)</li>
-                <li><strong>💧 Idratazione:</strong> Bevi 3-4 litri di acqua distribuiti nella giornata</li>
-                <li><strong>🧘 Stretching/Yoga:</strong> 20-30 minuti di sessione dedicata</li>
-                <li><strong>🧠 Stress Mentale:</strong> Riduci impegni, medita 10 minuti</li>
-                <li><strong>🍽️ Nutrizione:</strong> Pasti nutrienti con proteine, carboidrati, grassi buoni</li>
-                <li><strong>🛀 Relax:</strong> Bagno caldo 20 minuti, massaggi leggeri</li>
+                <li><strong>🛏️ Sonno:</strong> Dormi 8-9 ore (target: {max(8, r['ore_sonno'] + 1):.1f}h) 🎯</li>
+                <li><strong>💧 Idratazione:</strong> 3-4 litri acqua distribuiti</li>
+                <li><strong>🧘 Yoga/Stretching:</strong> 20-30 min (priorità!)</li>
+                <li><strong>🧠 Stress Mental:</strong> Riduci impegni, medita 10 min</li>
+                <li><strong>🍽️ Nutrizione:</strong> Pasti nutrienti bilanciati</li>
+                <li><strong>🛀 Relax:</strong> Bagno caldo 20 min, massaggi leggeri</li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
             
             with tab_cons4:
                 df_trend = df.tail(14).copy()
-                df_trend['Giorno_num'] = range(1, len(df_trend)+1)
+                df_trend['Giorno_num'] = range(14, 0, -1)
                 
                 fig_trend = px.line(df_trend, x='Giorno_num', y=['RPE', 'Stress Lavoro'],
                                    title="Trend Ultimi 14 Giorni",
                                    labels={'Giorno_num': 'Giorni fa', 'value': 'Valore'},
-                                   height=350)
+                                   height=350,
+                                   markers=True)
+                fig_trend.update_layout(hovermode='x unified')
                 st.plotly_chart(fig_trend, use_container_width=True)
         
         else:
-            st.markdown("""
+            st.markdown(f"""
             <div class='danger-box'>
             <h2>❌ RIPOSO OBBLIGATORIO</h2>
-            <p>Il tuo corpo è in <strong>PERICOLO</strong>. Devi riposare TODAY.</p>
+            <p>Il tuo corpo è in <strong>PERICOLO</strong>. Parametri critici: Sonno {r['ore_sonno']:.1f}h (insufficiente), 
+            Stress {r['stress_lavoro']}/10 (alto), RPE {r['rpe_previsto']}/10 (intenso). <strong>DEVI RIPOSARE</strong>.</p>
             </div>
             """, unsafe_allow_html=True)
             
-            tab_cons1, tab_cons2, tab_cons3, tab_cons4 = st.tabs(["📝 Istruzioni Critiche", "📊 Cosa NON Fare", "🚨 Segnali Allarme", "📈 Recovery Path"])
+            tab_cons1, tab_cons2, tab_cons3, tab_cons4 = st.tabs(["📝 Istruzioni", "🚫 Divieti", "🚨 Allarmi", "🔄 Recovery"])
             
             with tab_cons1:
                 st.markdown("""
@@ -1061,25 +1073,23 @@ elif pagina == "💡 Consiglio Finale":
                 <ul style='font-size: 1.1em;'>
                 <li><strong>🚫 NON CORRERE ASSOLUTAMENTE</strong></li>
                 <li><strong>✓ Riposo totale:</strong> Stai a casa, evita impegni</li>
-                <li><strong>✓ Camminate leggerissime:</strong> Max 10-15 minuti a passo lento</li>
-                <li><strong>✓ Stretching delicato:</strong> 10 minuti senza forzare</li>
-                <li><strong>✓ Meditazione:</strong> 10-15 minuti di respirazione profonda</li>
-                <li><strong>✓ Bagno caldo:</strong> 20-30 minuti per rilassare i muscoli</li>
+                <li><strong>✓ Camminate:</strong> Max 10-15 min a passo molto lento</li>
+                <li><strong>✓ Stretching delicato:</strong> 10 min senza forzare</li>
+                <li><strong>✓ Meditazione:</strong> 10-15 min respirazione profonda</li>
+                <li><strong>✓ Bagno caldo:</strong> 20-30 min per rilassare muscoli</li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
                 
                 st.markdown("""
                 <div class='warning-box'>
-                <h3>🛏️ Notte: Priorità Numero 1</h3>
+                <h3>🛏️ Notte: PRIORITÀ NUMERO 1</h3>
                 <ul>
                 <li><strong>Dormi 9-10 ore</strong> (non negoziabile)</li>
-                <li><strong>Cena leggera:</strong> 2 ore prima di andare a letto</li>
-                <li><strong>Camera fresca:</strong> 18-20°C</li>
-                <li><strong>Silenzio totale:</strong> Usa tappi per le orecchie</li>
-                <li><strong>Buio totale:</strong> Niente luci, chiudi tende/persiane</li>
-                <li><strong>NO tecnologia:</strong> Niente telefono/tablet 30 minuti prima di dormire</li>
-                <li><strong>Magnesio (opzionale):</strong> Supplemento 30 min prima di letto</li>
+                <li><strong>Cena leggera:</strong> 2h prima di letto</li>
+                <li><strong>Camera:</strong> Fresca (18-20°C), silenzio, buio totale</li>
+                <li><strong>NO tecnologia:</strong> Niente telefono 30 min prima</li>
+                <li><strong>Magnesio:</strong> Supplemento 30 min prima (opzionale)</li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1089,15 +1099,15 @@ elif pagina == "💡 Consiglio Finale":
                 <div class='danger-box'>
                 <h3>🚫 Cosa NON Fare</h3>
                 <ul>
-                <li>❌ Correre, anche "solo" 3 km easy</li>
+                <li>❌ Correre (neanche 3 km easy)</li>
                 <li>❌ Palestra / esercizi intensi</li>
                 <li>❌ Sport competitivi</li>
                 <li>❌ Allenamenti "ridotti"</li>
                 <li>❌ Caffè dopo le 14:00</li>
                 <li>❌ Alcol</li>
-                <li>❌ Cibi pesanti / fritti</li>
-                <li>❌ Situazioni di forte stress emotivo</li>
-                <li>❌ Lavoro intenso (se possibile rinvia)</li>
+                <li>❌ Cibi pesanti/fritti</li>
+                <li>❌ Stress emotivo intenso</li>
+                <li>❌ Lavoro pesante (rinvia se possibile)</li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1105,26 +1115,26 @@ elif pagina == "💡 Consiglio Finale":
             with tab_cons3:
                 st.markdown("""
                 <div class='danger-box'>
-                <h3>🚑 Segnali di Allarme - CONSULTA MEDICO SUBITO se</h3>
+                <h3>🚑 Consulta Medico Subito se:</h3>
                 <ul style='font-size: 1.1em; color: #ff0000;'>
-                <li><strong>Dolore acuto</strong> in qualsiasi articolazione/muscolo</li>
+                <li><strong>Dolore acuto</strong> articolazioni/muscoli</li>
                 <li><strong>Gonfiore/rigidità</strong> che peggiora in 24h</li>
-                <li><strong>Febbre > 37.5°C</strong> per più di 2 giorni</li>
-                <li><strong>Tachicardia a riposo</strong> (FC riposo > 90 bpm)</li>
+                <li><strong>Febbre > 37.5°C</strong> per 2+ giorni</li>
+                <li><strong>Tachicardia a riposo</strong> (FC > 90 bpm)</li>
                 <li><strong>Vertigini/svenimenti</strong></li>
                 <li><strong>Depressione/ansia estrema</strong></li>
                 <li><strong>Nausea/vomito persistenti</strong></li>
-                <li><strong>Stanchezza che non passa con riposo</strong></li>
                 </ul>
                 </div>
                 """, unsafe_allow_html=True)
             
             with tab_cons4:
                 recovery_plan = pd.DataFrame({
-                    'Giorno': ['Oggi', '+1', '+2', '+3', '+4', '+5'],
-                    'Attività': ['Riposo Total', 'Riposo + Sonno', 'Camminate Facili', 'Recovery Run', 'Easy Run', 'Ritorno Graduale'],
-                    'Durata': ['0 min', '0 min', '20 min', '20-30 min', '30-40 min', '40-50 min'],
-                    'Priorità': ['Sonno', 'Sonno', 'Movimento Leggero', 'Movimento Leggero', 'Rientro', 'Valutare']
+                    'Giorno': ['OGGI', '+1', '+2', '+3', '+4', '+5-7'],
+                    'Attività': ['Riposo Tot.', 'Riposo + Sonno', 'Camminate Facili', 'Recovery Run', 'Easy Run', 'Valuta Ritorno'],
+                    'Durata': ['0 min', '0 min', '15 min', '20 min', '30 min', 'Dipende'],
+                    'Focus': ['Sonno!', 'Sonno!', 'Movimento Leggero', 'Movimento Leggero', 'Rientro Graduale', 'Ascolta Corpo']
                 })
                 
+                st.markdown("**Piano Recovery 7 Giorni**")
                 st.dataframe(recovery_plan, use_container_width=True, hide_index=True)
