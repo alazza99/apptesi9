@@ -23,11 +23,37 @@ st.markdown("""
     .success-box { background: rgba(52, 168, 83, 0.1); border-left: 4px solid #10b981; padding: 20px; border-radius: 12px; margin: 20px 0; color: #d1d5db; border: 1px solid rgba(255,255,255,0.05); }
     .warning-box { background: rgba(251, 188, 4, 0.1); border-left: 4px solid #f59e0b; padding: 20px; border-radius: 12px; margin: 20px 0; color: #d1d5db; border: 1px solid rgba(255,255,255,0.05); }
     .danger-box { background: rgba(234, 67, 53, 0.1); border-left: 4px solid #ef4444; padding: 20px; border-radius: 12px; margin: 20px 0; color: #d1d5db; border: 1px solid rgba(255,255,255,0.05); }
-
     .kpi-card { background: #111827; border-radius: 16px; padding: 30px 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid #1f2937; }
     
     /* Box spiegazioni grafici */
     .explain-text { font-size: 0.9em; color: #9ca3af; line-height: 1.5; margin-top: 5px; padding: 15px; background: #111827; border-radius: 8px; border-left: 3px solid #6b7280;}
+
+    /* --- FIX LEGGIBILITà WIDGET / FINESTRE SCURE --- */
+    .stForm { background-color: #0f1420; border: 1px solid #1f2937; border-radius: 16px; padding: 25px; }
+    .stTextInput input, .stNumberInput input, .stTextArea textarea, .stDateInput input {
+        background-color: #1a2233 !important; color: #f8f9fa !important; border: 1px solid #374151 !important;
+    }
+    .stSelectbox div[data-baseweb="select"] > div, .stMultiSelect div[data-baseweb="select"] > div {
+        background-color: #1a2233 !important; color: #f8f9fa !important; border: 1px solid #374151 !important;
+    }
+    div[data-baseweb="popover"] { background-color: #1a2233 !important; }
+    div[data-baseweb="popover"] ul, div[data-baseweb="menu"], ul[role="listbox"] {
+        background-color: #1a2233 !important;
+    }
+    div[data-baseweb="popover"] li, div[data-baseweb="menu"] li, ul[role="listbox"] li {
+        background-color: #1a2233 !important; color: #f8f9fa !important;
+    }
+    div[data-baseweb="popover"] li:hover, ul[role="listbox"] li:hover {
+        background-color: #2d3748 !important; color: #ffffff !important;
+    }
+    .stSlider label, .stSelectSlider label, .stTextInput label, .stNumberInput label, .stSelectbox label, .stDateInput label {
+        color: #e5e7eb !important; font-weight: 600 !important;
+    }
+    .stSlider [data-baseweb="slider"] div { color: #f8f9fa !important; }
+    div[data-testid="stTickBar"] { color: #9ca3af !important; }
+    .stSelectSlider [role="slider"] { background-color: #3b82f6 !important; }
+    div[data-testid="stWidgetLabel"] p { color: #e5e7eb !important; }
+    div[data-testid="stForm"] { background-color: #0f1420; border: 1px solid #1f2937; border-radius: 16px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -155,6 +181,15 @@ if pagina == "📋 Analisi Completa":
         with col_o2:
             distanza_oggi = st.number_input("Distanza Prevista (km)", min_value=0.0, value=10.0)
         
+        st.markdown("#### 🏁 Obiettivo Finale (Lungo Termine)")
+        col_of1, col_of2, col_of3 = st.columns(3)
+        with col_of1:
+            obj_finale = st.text_input("Obiettivo Finale", placeholder="Es: Maratona sub 3:30")
+        with col_of2:
+            data_obj_finale = st.date_input("Data Obiettivo", value=pd.Timestamp.today() + pd.Timedelta(days=90))
+        with col_of3:
+            km_obj_finale = st.number_input("Distanza Gara (km)", min_value=0.0, value=42.2)
+        
         st.markdown("---")
         st.markdown("### 😴 Sonno e Recupero")
         col_s1, col_s2, col_s3 = st.columns(3)
@@ -188,12 +223,21 @@ if pagina == "📋 Analisi Completa":
         st.session_state.analisi_fatta = True
         st.session_state.risultati_analisi = {
             'obj_oggi': obj_oggi, 'distanza_oggi': distanza_oggi,
+            'obj_finale': obj_finale, 'data_obj_finale': data_obj_finale, 'km_obj_finale': km_obj_finale,
             'ore_sonno': ore_sonno, 'qualita_sonno': qualita_sonno,
             'fc_riposo': fc_riposo, 'stress_lavoro': stress_lavoro,
             'ore_lavoro': ore_lavoro, 'tipo_allenamento': tipo_allenamento,
             'rpe_previsto': rpe_previsto,
         }
         st.success("✓ Analisi completata e caricata nel modello!")
+        
+        if obj_finale:
+            giorni_rimasti = (pd.Timestamp(data_obj_finale) - pd.Timestamp.today()).days
+            st.markdown(f"""
+            <div class='info-box' style='border-left-color:#8b5cf6;'>
+            <strong>🏁 Obiettivo Finale impostato:</strong> {obj_finale} ({km_obj_finale:.1f} km) — mancano circa <strong>{max(giorni_rimasti,0)} giorni</strong> ({pd.Timestamp(data_obj_finale).strftime('%d/%m/%Y')}).
+            </div>
+            """, unsafe_allow_html=True)
 
 # ----------------- PAGINA 2: STATISTICHE -----------------
 elif pagina == "📈 Statistiche":
@@ -241,6 +285,31 @@ elif pagina == "📈 Statistiche":
             fig_cum.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_cum, use_container_width=True)
             st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Una linea retta indica costanza. Una linea piatta indica stop o infortuni.</div>", unsafe_allow_html=True)
+            
+            # --- SORPRESA: Bacheca Record & Achievement (non è un grafico) ---
+            record_km = df.loc[df['Distanza (km)'].idxmax()]
+            record_vel = df.loc[df['Velocità (km/h)'].idxmax()]
+            giorni_attivi = (df['Distanza (km)'] > 0).sum()
+            streak = int((df['Distanza (km)'] > df['Distanza (km)'].mean()).astype(int).groupby((df['Distanza (km)'] <= df['Distanza (km)'].mean()).cumsum()).cumsum().max())
+            
+            st.markdown(f"""
+            <div class='kpi-card' style='text-align:left; margin-top:10px; background: linear-gradient(135deg, #111827 0%, #1a1033 100%); border: 1px solid #3b2a5e;'>
+                <h3 style='color:#facc15; margin-bottom:15px;'>🏆 Bacheca Record — Ultimi 90 giorni</h3>
+                <div style='display:flex; justify-content:space-between; margin:8px 0; color:#e5e7eb;'>
+                    <span>🥇 Corsa più lunga</span><strong style='color:#f8f9fa;'>{record_km['Distanza (km)']:.1f} km</strong>
+                </div>
+                <div style='display:flex; justify-content:space-between; margin:8px 0; color:#e5e7eb;'>
+                    <span>⚡ Velocità massima</span><strong style='color:#f8f9fa;'>{record_vel['Velocità (km/h)']:.1f} km/h</strong>
+                </div>
+                <div style='display:flex; justify-content:space-between; margin:8px 0; color:#e5e7eb;'>
+                    <span>🔥 Miglior striscia sopra media</span><strong style='color:#f8f9fa;'>{streak} allenamenti</strong>
+                </div>
+                <div style='display:flex; justify-content:space-between; margin:8px 0; color:#e5e7eb;'>
+                    <span>📅 Giorni con allenamento</span><strong style='color:#f8f9fa;'>{giorni_attivi} / {len(df)}</strong>
+                </div>
+                <p style='color:#9ca3af; font-size:0.8em; margin-top:12px; margin-bottom:0;'>🎖️ Continua così: ogni record battuto è un mattoncino in più verso il tuo obiettivo finale!</p>
+            </div>
+            """, unsafe_allow_html=True)
     
     with tab2:
         col1, col2 = st.columns(2)
@@ -328,7 +397,7 @@ elif pagina == "📊 KPI Dashboard":
         fig_balance = go.Figure()
         fig_balance.add_trace(go.Scatter(x=df_14['Giorno'], y=df_14['RPE']*10, name="Carico Sforzo (Strain)", fill='tozeroy', fillcolor='rgba(239, 68, 68, 0.2)', line=dict(color='#ef4444', width=3)))
         fig_balance.add_trace(go.Scatter(x=df_14['Giorno'], y=(df_14['Ore Sonno']/8)*100, name="Capacità di Recupero", line=dict(color='#10b981', width=4)))
-        fig_balance.update_layout(height=400, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        fig_balance.update_layout(height=400, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="#f8f9fa", size=13), bgcolor="rgba(17,24,39,0.85)", bordercolor="#374151", borderwidth=1))
         st.plotly_chart(fig_balance, use_container_width=True)
         st.markdown("""
         <div class='explain-text' style='margin-bottom: 25px;'>
@@ -399,6 +468,42 @@ elif pagina == "📊 KPI Dashboard":
         col_p2.metric("🧠 Stress", f"{r['stress_lavoro']}/10", "Livello")
         col_p3.metric("⚡ RPE", f"{r['rpe_previsto']}/10", "Sforzo")
         col_p4.metric("❤️ FC Riposo", f"{r['fc_riposo']} bpm", "Base")
+        
+        # --- SORPRESA: Profilo Atleta AI + Consistenza (in fondo alla pagina) ---
+        st.markdown("<br>---<br>", unsafe_allow_html=True)
+        st.markdown("### 🧬 Il Tuo Profilo Atletico AI")
+        
+        cv_sonno = df['Ore Sonno'].std() / df['Ore Sonno'].mean()
+        cv_rpe = df['RPE'].std() / df['RPE'].mean()
+        consistenza = max(0, 100 - (cv_sonno + cv_rpe) * 100)
+        
+        if recovery_score >= 75 and sma < 10:
+            archetipo, arch_icon, arch_col, arch_desc = "Il Bilanciato", "⚖️", "#10b981", "Gestisci sonno e carichi con grande equilibrio. Il tuo corpo lavora in supercompensazione costante: mantieni questa routine."
+        elif r['stress_lavoro'] >= 7 and r['ore_sonno'] < 7:
+            archetipo, arch_icon, arch_col, arch_desc = "Il Guerriero Stanco", "🛡️", "#f59e0b", "Spingi forte nonostante stress e sonno limitato. Grande grinta, ma il conto arriva: pianifica un blocco di recupero prima possibile."
+        elif sma >= 15:
+            archetipo, arch_icon, arch_col, arch_desc = "L'Instancabile", "🔥", "#ef4444", "Accumuli carico su carico. Ottimo motore, ma attenzione: senza pause il rischio di crollo fisico o mentale cresce rapidamente."
+        else:
+            archetipo, arch_icon, arch_col, arch_desc = "Il Costante", "🧭", "#3b82f6", "Il tuo profilo è stabile e prevedibile: la base ideale su cui costruire progressi graduali e a basso rischio infortuni."
+        
+        col_arch1, col_arch2 = st.columns([1, 2])
+        with col_arch1:
+            st.markdown(f"""
+            <div class='kpi-card' style='border-top: 4px solid {arch_col};'>
+                <div style='font-size:3em;'>{arch_icon}</div>
+                <h3 style='color:{arch_col}; margin:5px 0;'>{archetipo}</h3>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_arch2:
+            st.markdown(f"""
+            <div class='kpi-card' style='text-align:left; height:100%;'>
+                <p style='color:#d1d5db; font-size:1.05em; margin-bottom:15px;'>{arch_desc}</p>
+                <p style='color:#9ca3af; margin-bottom:5px;'>Indice di Consistenza (90gg)</p>
+                <div style='background:#1f2937; border-radius:8px; overflow:hidden; height:22px;'>
+                    <div style='background: linear-gradient(90deg, #3b82f6, #10b981); width:{min(consistenza,100):.0f}%; height:100%; text-align:right; padding-right:8px; color:white; font-size:0.8em; font-weight:bold; line-height:22px;'>{consistenza:.0f}%</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
 # ----------------- PAGINA 4: ML EXPLAINED -----------------
 elif pagina == "🔮 ML Explained":
@@ -430,7 +535,7 @@ elif pagina == "🔮 ML Explained":
         feature_names = ['Distanza', 'Sonno', 'Stress', 'FC Media', 'RPE']
         importances = rf_model.feature_importances_
         
-        tab1, tab2, tab3, tab4, tab5 = st.tabs(["🎓 Spiegazione", "📊 Feature Importance", "🔬 Confusion Matrix", "📈 Metriche", "🧮 Calcolo LIVE"])
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["🎓 Spiegazione", "📊 Feature Importance", "🔬 Confusion Matrix", "📈 Metriche", "🧮 Calcolo LIVE", "🧪 Simulatore What-If"])
         
         with tab1:
             # SPIEGAZIONE MIGLIORATA E RISCRITTA
@@ -521,7 +626,71 @@ elif pagina == "🔮 ML Explained":
                 """, unsafe_allow_html=True)
             else:
                 st.warning("⚠️ Completa il questionario per vedere il calcolo personalizzato.")
-
+        
+        with tab6:
+            st.markdown("""
+            <div class='info-box'>
+            <strong>🧪 Muovi le leve e osserva in tempo reale come cambia la previsione dei 100 alberi.</strong> Questo simulatore non tocca i tuoi dati salvati: è un laboratorio per capire "cosa succederebbe se...".
+            </div>
+            """, unsafe_allow_html=True)
+            
+            base = st.session_state.risultati_analisi if st.session_state.analisi_fatta else {
+                'distanza_oggi': 10.0, 'ore_sonno': 7.5, 'stress_lavoro': 5, 'rpe_previsto': 6
+            }
+            
+            col_sim1, col_sim2 = st.columns(2)
+            with col_sim1:
+                sim_dist = st.slider("🏃 Distanza simulata (km)", 0.0, 42.0, float(base.get('distanza_oggi', 10.0)), key="sim_dist")
+                sim_sonno = st.slider("😴 Ore di sonno simulate", 2.0, 12.0, float(base.get('ore_sonno', 7.5)), key="sim_sonno")
+            with col_sim2:
+                sim_stress = st.slider("🧠 Stress simulato", 1, 10, int(base.get('stress_lavoro', 5)), key="sim_stress")
+                sim_rpe = st.slider("⚡ RPE simulato", 1, 10, int(base.get('rpe_previsto', 6)), key="sim_rpe")
+            
+            sim_fc = 100 + sim_rpe * 10
+            sim_input = np.array([[sim_dist, sim_sonno, sim_stress, sim_fc, sim_rpe]])
+            sim_prob = rf_model.predict_proba(scaler.transform(sim_input))[0][1] * 100
+            sim_color = "#ef4444" if sim_prob >= 60 else "#f59e0b" if sim_prob >= 25 else "#10b981"
+            
+            col_simg1, col_simg2 = st.columns(2)
+            with col_simg1:
+                fig_sim_gauge = go.Figure(go.Indicator(
+                    mode="gauge+number", value=sim_prob, title={'text': "Rischio Simulato", 'font': {'color': '#9ca3af'}},
+                    gauge={'axis': {'range': [0, 100]}, 'bar': {'color': sim_color}, 'bgcolor': "#1f2937", 'borderwidth': 0},
+                    number={'suffix': '%', 'font': {'size': 40, 'color': 'white'}}
+                ))
+                fig_sim_gauge.update_layout(height=320, paper_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(fig_sim_gauge, use_container_width=True)
+            with col_simg2:
+                # Sensitivity: varia il sonno tenendo fissi gli altri parametri (partial dependence semplificata)
+                sonno_range = np.linspace(4, 10, 20)
+                probs_range = []
+                for s in sonno_range:
+                    test_input = np.array([[sim_dist, s, sim_stress, sim_fc, sim_rpe]])
+                    p = rf_model.predict_proba(scaler.transform(test_input))[0][1] * 100
+                    probs_range.append(p)
+                fig_sens = px.line(x=sonno_range, y=probs_range, labels={'x': 'Ore di Sonno', 'y': 'Rischio %'}, title="Sensibilità: Rischio vs Ore di Sonno")
+                fig_sens.update_traces(line_color="#8b5cf6", line_width=3)
+                fig_sens.add_vline(x=sim_sonno, line_dash="dash", line_color="#ef4444")
+                fig_sens.update_layout(height=320, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+                st.plotly_chart(fig_sens, use_container_width=True)
+            
+            st.markdown(f"""
+            <div class='explain-text'>
+            <strong>❓ Cosa Calcola:</strong> Una previsione "ipotetica" indipendente dai tuoi dati salvati, utile per testare scenari futuri.<br>
+            <strong>⚙️ Come lo calcola:</strong> Passa i valori delle leve agli stessi 100 alberi del modello e conta i voti per "Rischio".<br>
+            <strong>🎯 Il grafico di sensibilità</strong> mostra come cambierebbe il rischio se SOLO le ore di sonno variassero, a parità di tutto il resto: la linea tratteggiata rossa è il tuo valore attuale simulato ({sim_sonno:.1f}h).
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("**📅 Proiezione Rischio Prossimi 7 Giorni (se le abitudini restano queste)**")
+            proj_days = [f"Giorno +{i}" for i in range(1, 8)]
+            proj_drift = np.clip(sim_prob + np.cumsum(np.random.normal(0.5 if sim_prob > 40 else -0.5, 3, 7)), 0, 100)
+            fig_proj = px.area(x=proj_days, y=proj_drift, labels={'x': '', 'y': 'Rischio %'})
+            fig_proj.update_traces(line_color=sim_color, fillcolor=f"rgba(239,68,68,0.15)" if sim_color == "#ef4444" else "rgba(16,185,129,0.15)")
+            fig_proj.update_layout(height=300, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+            st.plotly_chart(fig_proj, use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Nota:</strong> Proiezione indicativa basata sull'inerzia del trend attuale, non una previsione clinica: usala solo come guida direzionale.</div>", unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Errore ML: {str(e)}")
 
@@ -563,16 +732,81 @@ elif pagina == "💡 Consiglio Finale":
         </div>
         """, unsafe_allow_html=True)
         
+        st.markdown("""
+        <style>
+        .kpi-card-equal { background: #111827; border-radius: 16px; padding: 25px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid #1f2937; height: 480px; display: flex; flex-direction: column; }
+        .kpi-card-equal .kpi-equal-body { overflow-y: auto; flex-grow: 1; }
+        .kpi-card-equal .kpi-equal-body::-webkit-scrollbar { width: 6px; }
+        .kpi-card-equal .kpi-equal-body::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Personalizzazione protocollo in base a tipo di allenamento e distanza
+        tipo_all = r.get('tipo_allenamento', 'Easy Run')
+        idratazione_pre = round(distanza_target * 20)
+        idratazione_post = round(distanza_target * 15)
+        carbo_pre = round(distanza_target * 3)
+        prot_post = round(distanza_target * 1.2) + 15
+        carbo_post = round(distanza_target * 4) + 20
+        
         col_new1, col_new2, col_new3 = st.columns(3)
         with col_new1:
-            st.markdown(f"<div class='kpi-card'><h3 style='color:#3b82f6;'>Distanza Consigliata</h3><h1 style='color:white;'>{distanza_consigliata:.1f} km</h1><p style='color:#9ca3af;'>su {distanza_target}km desiderati</p></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='kpi-card-equal'>
+                <h3 style='color:#3b82f6;'>Distanza Consigliata</h3>
+                <div class='kpi-equal-body' style='display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+                    <h1 style='color:white; font-size:3em; margin:0;'>{distanza_consigliata:.1f} km</h1>
+                    <p style='color:#9ca3af;'>su {distanza_target}km desiderati</p>
+                    <p style='color:#6b7280; font-size:0.85em; margin-top:15px; text-align:center;'>Tipo allenamento: <strong style='color:#d1d5db;'>{tipo_all}</strong></p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         with col_new2:
-            st.markdown(f"<div class='kpi-card'><h3 style='color:{col};'>Rischio Calcolato</h3><h1 style='color:white;'>{risk_score:.0f}%</h1><p style='color:#9ca3af;'>Probabilità Infortunio/Burnout</p></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='kpi-card-equal'>
+                <h3 style='color:{col};'>Rischio Calcolato</h3>
+                <div class='kpi-equal-body' style='display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+                    <h1 style='color:white; font-size:3em; margin:0;'>{risk_score:.0f}%</h1>
+                    <p style='color:#9ca3af;'>Probabilità Infortunio/Burnout</p>
+                    <p style='color:#6b7280; font-size:0.85em; margin-top:15px; text-align:center;'>Recovery Score: <strong style='color:#d1d5db;'>{recovery_score:.0f}%</strong> · SMA: <strong style='color:#d1d5db;'>{sma:.1f}</strong></p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         with col_new3:
-            st.markdown("<div class='kpi-card'><h3 style='color:#10b981;'>Protocollo Coach</h3><p style='color:#d1d5db; font-size:0.9em; text-align:left; margin-bottom:0;'><strong>PRE:</strong> 400ml liquidi, Attivazione glutei e Polpacci dinamici (5 min).<br><strong>POST:</strong> 25g Prot + 50g Carbs entro 30 min, Rullo miofasciale.</p></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='kpi-card-equal'>
+                <h3 style='color:#10b981;'>Protocollo Coach Dettagliato</h3>
+                <div class='kpi-equal-body' style='color:#d1d5db; font-size:0.85em; text-align:left;'>
+                    <strong style='color:#3b82f6;'>🕐 PRE-ALLENAMENTO (T-90/-15 min)</strong>
+                    <ul style='margin-top:5px; padding-left:18px;'>
+                        <li>T-90': pasto leggero, ~{carbo_pre}g carboidrati (banana, pane, riso).</li>
+                        <li>T-30': {idratazione_pre}ml di liquidi (acqua + elettroliti se >20°C).</li>
+                        <li>T-15': mobilità dinamica anche/caviglie, skip, calciata dietro (5').</li>
+                        <li>T-5': attivazione glutei con band, 2x15 ripetizioni.</li>
+                    </ul>
+                    <strong style='color:#f59e0b;'>🏃 DURANTE</strong>
+                    <ul style='margin-top:5px; padding-left:18px;'>
+                        <li>Sorso d'acqua ogni 20' se {tipo_all.lower()} supera i 60'.</li>
+                        <li>Cadenza target 170-180 spm, respiro 3:2 (corsa lenta) o 2:1 (soglia).</li>
+                        <li>Se FC supera la tua soglia per >5' consecutivi, rallenta subito.</li>
+                    </ul>
+                    <strong style='color:#10b981;'>✅ POST (0-30 min)</strong>
+                    <ul style='margin-top:5px; padding-left:18px;'>
+                        <li>Entro 30': ~{prot_post}g proteine + ~{carbo_post}g carboidrati (finestra anabolica).</li>
+                        <li>{idratazione_post}ml liquidi per reintegro, +500mg sodio se sudorazione abbondante.</li>
+                        <li>Stretching statico gentile 8-10' (polpacci, ischio, ileopsoas).</li>
+                        <li>Rullo miofasciale 5' su quadricipiti e fascia plantare.</li>
+                    </ul>
+                    <strong style='color:#8b5cf6;'>🌙 SERALE</strong>
+                    <ul style='margin-top:5px; padding-left:18px; margin-bottom:0;'>
+                        <li>Doccia fredda/tiepida per ridurre infiammazione.</li>
+                        <li>Nessuno schermo 30' prima di dormire, punta a {max(r['ore_sonno'],7.5):.1f}h di sonno.</li>
+                    </ul>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         
         st.markdown("<br>---<br>", unsafe_allow_html=True)
-
         # --- SEZIONE ORIGINALE: Parametri vs Media ---
         st.subheader("📊 Analisi Parametri vs Media (90 giorni)")
         media_sonno_90, media_stress_90, media_rpe_90 = df['Ore Sonno'].mean(), df['Stress Lavoro'].mean(), df['RPE'].mean()
@@ -608,7 +842,6 @@ elif pagina == "💡 Consiglio Finale":
             fig_stress.add_hline(y=r['stress_lavoro'], line_dash="dash", line_color="red")
             fig_stress.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_stress, use_container_width=True)
-
         col_g4, col_g5 = st.columns(2)
         with col_g4:
             fig_scatter = px.scatter(df_recent, x='Ore Sonno', y='RPE', size='Distanza (km)', color='FC Media', height=350, title="Relazione Sonno-RPE-FC (Originale)")
@@ -638,7 +871,6 @@ elif pagina == "💡 Consiglio Finale":
             fig_pace.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=300)
             st.plotly_chart(fig_pace, use_container_width=True)
             st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Riscalda il motore nei primi 10 minuti (rampa dolce) per non creare acido lattico in eccesso. Mantieni il blocco centrale stabile senza picchi.</div>", unsafe_allow_html=True)
-
         with g_col2:
             # 2. Recovery Window
             hours = ["+0h", "+6h", "+12h", "+24h", "+48h"]
@@ -648,7 +880,6 @@ elif pagina == "💡 Consiglio Finale":
             fig_rec.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=300)
             st.plotly_chart(fig_rec, use_container_width=True)
             st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Quanto ci metteranno i tuoi muscoli a rigenerarsi dopo questo allenamento. Fino al raggiungimento dell'80% non inserire lavori di forza.</div>", unsafe_allow_html=True)
-
         g_col3, g_col4 = st.columns(2)
         with g_col3:
             # 3. ACWR
@@ -659,14 +890,12 @@ elif pagina == "💡 Consiglio Finale":
             fig_acwr.update_layout(title="3. Bilancio Acuto vs Cronico (ACWR)", barmode='group', paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=300)
             st.plotly_chart(fig_acwr, use_container_width=True)
             st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Mostra se stai correndo troppo rispetto a quello a cui sei abituato. Un rapporto tra la barra gialla e blu intorno a 1.15 è ottimale per migliorare. Oltre l'1.3 è zona infortuni.</div>", unsafe_allow_html=True)
-
         with g_col4:
             # 4. Sforzo Energetico
             fig_pie2 = px.pie(values=[70, 20, 10], names=['Aerobico Base', 'Soglia Lattata', 'Anaerobico'], title="4. Ripartizione Energetica Richiesta", hole=0.5, color_discrete_sequence=['#3b82f6', '#f59e0b', '#ef4444'])
             fig_pie2.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=300)
             st.plotly_chart(fig_pie2, use_container_width=True)
             st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Su cosa lavorerà il tuo metabolismo oggi. In base a questo capisci quanti carboidrati (Soglia) o grassi (Aerobico) intaccherai.</div>", unsafe_allow_html=True)
-
         # 5. Waterfall Sonno
         fig_sleep_impact = go.Figure(go.Waterfall(
             name="Sonno", orientation="v", measure=["absolute", "relative", "relative", "total"],
