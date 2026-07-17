@@ -54,6 +54,35 @@ st.markdown("""
     .stSelectSlider [role="slider"] { background-color: #3b82f6 !important; }
     div[data-testid="stWidgetLabel"] p { color: #e5e7eb !important; }
     div[data-testid="stForm"] { background-color: #0f1420; border: 1px solid #1f2937; border-radius: 16px; }
+
+    /* --- SIDEBAR: stesso colore dell'app + testo leggibile --- */
+    section[data-testid="stSidebar"] {
+        background-color: #0b0f19 !important;
+        border-right: 1px solid #1f2937;
+    }
+    section[data-testid="stSidebar"] > div {
+        background-color: #0b0f19 !important;
+    }
+    section[data-testid="stSidebar"] h3 {
+        color: #e5e7eb !important;
+    }
+    section[data-testid="stSidebar"] div[role="radiogroup"] label p,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label span,
+    section[data-testid="stSidebar"] div[role="radiogroup"] label {
+        color: #f3f4f6 !important;
+    }
+    section[data-testid="stSidebar"] button {
+        background-color: #1a2233 !important;
+        border: 1px solid #374151 !important;
+    }
+    section[data-testid="stSidebar"] button p,
+    section[data-testid="stSidebar"] button span,
+    section[data-testid="stSidebar"] button div {
+        color: #f8f9fa !important;
+    }
+    section[data-testid="stSidebar"] hr {
+        border-color: #1f2937 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -832,16 +861,19 @@ elif pagina == "💡 Consiglio Finale":
             fig_sonno.add_hline(y=r['ore_sonno'], line_dash="dash", line_color="red")
             fig_sonno.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_sonno, use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> La linea rossa è il sonno di oggi: confrontalo con le ultime settimane per capire se stai recuperando meglio o peggio del solito.</div>", unsafe_allow_html=True)
         with col_g2:
             fig_rpe = px.line(df_recent, y='RPE', height=300, markers=True, title="RPE Trend", color_discrete_sequence=['#3b82f6'])
             fig_rpe.add_hline(y=r['rpe_previsto'], line_dash="dash", line_color="red")
             fig_rpe.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_rpe, use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> La linea rossa è lo sforzo previsto per oggi: se è ben sopra la media recente, il carico odierno è superiore al solito.</div>", unsafe_allow_html=True)
         with col_g3:
             fig_stress = px.line(df_recent, y='Stress Lavoro', height=300, markers=True, title="Stress Trend", color_discrete_sequence=['#f59e0b'])
             fig_stress.add_hline(y=r['stress_lavoro'], line_dash="dash", line_color="red")
             fig_stress.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_stress, use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Lo stress dichiarato oggi (linea rossa) incide sul recupero tanto quanto l'allenamento stesso: tienilo d'occhio nel tempo.</div>", unsafe_allow_html=True)
         col_g4, col_g5 = st.columns(2)
         with col_g4:
             fig_scatter = px.scatter(df_recent, x='Ore Sonno', y='RPE', size='Distanza (km)', color='FC Media', height=350, title="Relazione Sonno-RPE-FC (Originale)")
@@ -849,12 +881,14 @@ elif pagina == "💡 Consiglio Finale":
             fig_scatter.add_vline(x=r['ore_sonno'], line_dash="dash", line_color="red")
             fig_scatter.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_scatter, use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Ogni punto è un allenamento passato; le linee rosse indicano dove si colloca oggi tra sonno e sforzo rispetto allo storico.</div>", unsafe_allow_html=True)
         with col_g5:
             fig_box = go.Figure()
             fig_box.add_trace(go.Box(y=df['Ore Sonno'], name='Sonno 90gg', marker_color='#3b82f6'))
             fig_box.add_trace(go.Box(y=[r['ore_sonno']], name='Oggi', marker_color='#ef4444'))
             fig_box.update_layout(height=350, title="Sonno: Oggi vs Storico (Originale)", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
             st.plotly_chart(fig_box, use_container_width=True)
+            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Il box mostra la variabilità storica del sonno: il punto rosso è il valore di oggi rispetto alla tua norma.</div>", unsafe_allow_html=True)
             
         st.markdown("<br><hr><br>", unsafe_allow_html=True)
         
@@ -937,3 +971,4 @@ elif pagina == "💡 Consiglio Finale":
         )])
         fig_table_riepilogo.update_layout(margin=dict(l=0, r=0, t=0, b=0), paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=350)
         st.plotly_chart(fig_table_riepilogo, use_container_width=True)
+        st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Colpo d'occhio su tutti i tuoi indicatori di oggi: ✅ nella norma, ⚠️ da monitorare, 🔴 richiede attenzione immediata.</div>", unsafe_allow_html=True)
