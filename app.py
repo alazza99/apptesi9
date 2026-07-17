@@ -158,8 +158,9 @@ st.markdown("""
     div[data-testid="stMetricValue"] { font-family: 'JetBrains Mono', monospace !important; color: #fff !important; }
     div[data-testid="stMetricLabel"] { font-family: 'Inter', sans-serif !important; color: var(--text-faint) !important; }
 
+    /* Modificato: rimosso il bordo per le immagini astratte */
     .hero-media {
-        border-radius: 14px; overflow: hidden; border: 1px solid var(--line); position: relative; margin-bottom: 6px;
+        border-radius: 14px; overflow: hidden; position: relative; margin-bottom: 6px; border: none;
     }
     .hero-media img { display:block; width: 100%; height: 220px; object-fit: cover; filter: saturate(0.9) brightness(0.75); }
     .hero-media .tag {
@@ -258,12 +259,12 @@ if 'dati' not in st.session_state:
     st.session_state.device_connected = False
     st.session_state.device_info = None
 
-# Immagini astratte generate internamente (SVG vettoriale, nessuna dipendenza esterna)
-IMG_HERO_ANALISI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBCMTIyMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDUwNzBDIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3dBIiBjeD0iMjAlIiBjeT0iMTUlIiByPSI2NSUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIgc3RvcC1vcGFjaXR5PSIwLjE2Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMEU1RkYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJnbG93QiIgY3g9Ijg1JSIgY3k9IjkwJSIgcj0iNjUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjZBM0QiIHN0b3Atb3BhY2l0eT0iMC4xMiIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QTNEIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNnbG93QSkiLz4KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZ2xvd0IpIi8+Cgo8ZyBzdHJva2U9IiMxNjIwMmYiIHN0cm9rZS13aWR0aD0iMSI+CiAgPGxpbmUgeDE9IjAiIHkxPSI2NiIgeDI9IjkwMCIgeTI9IjY2Ii8+CiAgPGxpbmUgeDE9IjAiIHkxPSIxMzMiIHgyPSI5MDAiIHkyPSIxMzMiLz4KICA8bGluZSB4MT0iMCIgeTE9IjIwMCIgeDI9IjkwMCIgeTI9IjIwMCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iMjY3IiB4Mj0iOTAwIiB5Mj0iMjY3Ii8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzMzMiIHgyPSI5MDAiIHkyPSIzMzMiLz4KPC9nPgo8cGF0aCBkPSJNLTEwLDIyMCBMOTAsMjIwIEwxMTAsMjIwIEwxMjQsMTUwIEwxMzgsMjkwIEwxNTIsMTgwIEwxNjYsMjIwIEwzMDAsMjIwIEwzMjAsMjIwIEwzMzYsODAgTDM1MiwzMzAgTDM2OCwyMjAgTDUyMCwyMjAKICAgICAgICAgTDU0MCwyMjAgTDU1NCwxNjAgTDU2OCwyNzAgTDU4MiwyMjAgTDcwMCwyMjAgTDcxOCwyMjAgTDczMCwxMDAgTDc0NCwzMTAgTDc1OCwyMjAgTDkxMCwyMjAiCiAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwRTVGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45NSIvPgo8cGF0aCBkPSJNLTEwLDI2MCBMOTAsMjYwIEwxMTAsMjYwIEwxMjQsMjM1IEwxMzgsMjkwIEwxNTIsMjQ1IEwxNjYsMjYwIEwzMDAsMjYwIEwzMjAsMjYwIEwzMzYsMjA1IEwzNTIsMzAwIEwzNjgsMjYwIEw1MjAsMjYwCiAgICAgICAgIEw1NDAsMjYwIEw1NTQsMjMwIEw1NjgsMjg1IEw1ODIsMjYwIEw3MDAsMjYwIEw3MTgsMjYwIEw3MzAsMjE1IEw3NDQsMjk1IEw3NTgsMjYwIEw5MTAsMjYwIgogICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMEY1QTAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjM1Ii8+CjxjaXJjbGUgY3g9IjMzNiIgY3k9IjgwIiByPSI2IiBmaWxsPSIjMDBFNUZGIi8+CjxjaXJjbGUgY3g9IjMzNiIgY3k9IjgwIiByPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBFNUZGIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC41Ii8+CjxjaXJjbGUgY3g9IjczMCIgY3k9IjEwMCIgcj0iNiIgZmlsbD0iI0ZGNkEzRCIvPgo8Y2lyY2xlIGN4PSI3MzAiIGN5PSIxMDAiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjZBM0QiIHN0cm9rZS13aWR0aD0iMS41IiBvcGFjaXR5PSIwLjUiLz4KPGNpcmNsZSBjeD0iNTU0IiBjeT0iMTYwIiByPSI0IiBmaWxsPSIjMDBGNUEwIiBvcGFjaXR5PSIwLjgiLz4KPC9zdmc+"
-IMG_HERO_STATS = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBCMTIyMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDUwNzBDIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3dBIiBjeD0iMjAlIiBjeT0iMTUlIiByPSI2NSUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIgc3RvcC1vcGFjaXR5PSIwLjE2Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMEU1RkYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJnbG93QiIgY3g9Ijg1JSIgY3k9IjkwJSIgcj0iNjUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjZBM0QiIHN0b3Atb3BhY2l0eT0iMC4xMiIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QTNEIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNnbG93QSkiLz4KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZ2xvd0IpIi8+Cgo8ZGVmcz4KICA8bGluZWFyR3JhZGllbnQgaWQ9ImJhckdyYWQiIHgxPSIwIiB5MT0iMSIgeDI9IjAiIHkyPSIwIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwRTRBNTciLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIvPgogIDwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPGcgc3Ryb2tlPSIjMTYyMDJmIiBzdHJva2Utd2lkdGg9IjEiPgogIDxsaW5lIHgxPSIwIiB5MT0iMzYwIiB4Mj0iOTAwIiB5Mj0iMzYwIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIyNzAiIHgyPSI5MDAiIHkyPSIyNzAiLz4KICA8bGluZSB4MT0iMCIgeTE9IjE4MCIgeDI9IjkwMCIgeTI9IjE4MCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iOTAiIHgyPSI5MDAiIHkyPSI5MCIvPgo8L2c+CjxyZWN0IHg9IjguMCIgeT0iMzIwIiB3aWR0aD0iMjYiIGhlaWdodD0iNDAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjYyIi8+CjxyZWN0IHg9IjQyLjAiIHk9IjI4MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjgwIiByeD0iMyIgZmlsbD0idXJsKCNiYXJHcmFkKSIgb3BhY2l0eT0iMC43MCIvPgo8cmVjdCB4PSI3Ni4wIiB5PSIzMDUiIHdpZHRoPSIyNiIgaGVpZ2h0PSI1NSIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuNjUiLz4KPHJlY3QgeD0iMTEwLjAiIHk9IjI0MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEyMCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuNzgiLz4KPHJlY3QgeD0iMTQ0LjAiIHk9IjI2NSIgd2lkdGg9IjI2IiBoZWlnaHQ9Ijk1IiByeD0iMyIgZmlsbD0idXJsKCNiYXJHcmFkKSIgb3BhY2l0eT0iMC43MyIvPgo8cmVjdCB4PSIxNzguMCIgeT0iMjEwIiB3aWR0aD0iMjYiIGhlaWdodD0iMTUwIiByeD0iMyIgZmlsbD0idXJsKCNiYXJHcmFkKSIgb3BhY2l0eT0iMC44MyIvPgo8cmVjdCB4PSIyMTIuMCIgeT0iMjkwIiB3aWR0aD0iMjYiIGhlaWdodD0iNzAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjY4Ii8+CjxyZWN0IHg9IjI0Ni4wIiB5PSIxODAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIxODAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjg5Ii8+CjxyZWN0IHg9IjI4MC4wIiB5PSIyNTAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIxMTAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjc2Ii8+CjxyZWN0IHg9IjMxNC4wIiB5PSIxNjAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIyMDAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjkzIi8+CjxyZWN0IHg9IjM0OC4wIiB5PSIyMjAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIxNDAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjgxIi8+CjxyZWN0IHg9IjM4Mi4wIiB5PSIxOTAiIHdpZHRoPSIyNiIgaGVpZ2h0PSIxNzAiIHJ4PSIzIiBmaWxsPSJ1cmwoI2JhckdyYWQpIiBvcGFjaXR5PSIwLjg3Ii8+CjxyZWN0IHg9IjQxNi4wIiB5PSIyNzAiIHdpZHRoPSIyNiIgaGVpZ2h0PSI5MCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuNzIiLz4KPHJlY3QgeD0iNDUwLjAiIHk9IjE0MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjIyMCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuOTYiLz4KPHJlY3QgeD0iNDg0LjAiIHk9IjIzMCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEzMCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuNzkiLz4KPHJlY3QgeD0iNTE4LjAiIHk9IjIwMCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjE2MCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuODUiLz4KPHJlY3QgeD0iNTUyLjAiIHk9IjI2MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEwMCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuNzQiLz4KPHJlY3QgeD0iNTg2LjAiIHk9IjE3MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjE5MCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuOTEiLz4KPHJlY3QgeD0iNjIwLjAiIHk9IjIxMCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjE1MCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuODMiLz4KPHJlY3QgeD0iNjU0LjAiIHk9IjEyMCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjI0MCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjEuMDAiLz4KPHJlY3QgeD0iNjg4LjAiIHk9IjI0MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjEyMCIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuNzgiLz4KPHJlY3QgeD0iNzIyLjAiIHk9IjE4NSIgd2lkdGg9IjI2IiBoZWlnaHQ9IjE3NSIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuODgiLz4KPHJlY3QgeD0iNzU2LjAiIHk9IjE1NSIgd2lkdGg9IjI2IiBoZWlnaHQ9IjIwNSIgcng9IjMiIGZpbGw9InVybCgjYmFyR3JhZCkiIG9wYWNpdHk9IjAuOTMiLz4KPHJlY3QgeD0iNzkwLjAiIHk9IjI3MCIgd2lkdGg9IjI2IiBoZWlnaHQ9IjkwIiByeD0iMyIgZmlsbD0idXJsKCNiYXJHcmFkKSIgb3BhY2l0eT0iMC43MiIvPgo8cmVjdCB4PSI4MjQuMCIgeT0iMTMwIiB3aWR0aD0iMjYiIGhlaWdodD0iMjMwIiByeD0iMyIgZmlsbD0idXJsKCNiYXJHcmFkKSIgb3BhY2l0eT0iMC45OCIvPgo8cGF0aCBkPSJNMjEuMCwzMDYuMCBMNTUuMCwyNjYuMCBMODkuMCwyOTEuMCBMMTIzLjAsMjI2LjAgTDE1Ny4wLDI1MS4wIEwxOTEuMCwxOTYuMCBMMjI1LjAsMjc2LjAgTDI1OS4wLDE2Ni4wIEwyOTMuMCwyMzYuMCBMMzI3LjAsMTQ2LjAgTDM2MS4wLDIwNi4wIEwzOTUuMCwxNzYuMCBMNDI5LjAsMjU2LjAgTDQ2My4wLDEyNi4wIEw0OTcuMCwyMTYuMCBMNTMxLjAsMTg2LjAgTDU2NS4wLDI0Ni4wIEw1OTkuMCwxNTYuMCBMNjMzLjAsMTk2LjAgTDY2Ny4wLDEwNi4wIEw3MDEuMCwyMjYuMCBMNzM1LjAsMTcxLjAgTDc2OS4wLDE0MS4wIEw4MDMuMCwyNTYuMCBMODM3LjAsMTE2LjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGNkEzRCIgc3Ryb2tlLXdpZHRoPSIyLjUiIG9wYWNpdHk9IjAuNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPg=="
-IMG_HERO_KPI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBCMTIyMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDUwNzBDIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3dBIiBjeD0iMjAlIiBjeT0iMTUlIiByPSI2NSUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIgc3RvcC1vcGFjaXR5PSIwLjE2Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMEU1RkYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJnbG93QiIgY3g9Ijg1JSIgY3k9IjkwJSIgcj0iNjUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjZBM0QiIHN0b3Atb3BhY2l0eT0iMC4xMiIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QTNEIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNnbG93QSkiLz4KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZ2xvd0IpIi8+Cgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMDAsMjAwKSI+CiAgPGNpcmNsZSByPSIxNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE2MjAyZiIgc3Ryb2tlLXdpZHRoPSIxNCIvPgogIDxjaXJjbGUgcj0iMTUwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMEU1RkYiIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIKICAgICAgICAgIHN0cm9rZS1kYXNoYXJyYXk9IjYyMCA5NDMiIHRyYW5zZm9ybT0icm90YXRlKC05MCkiIG9wYWNpdHk9IjAuOSIvPgogIDxjaXJjbGUgcj0iMTE1IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNjIwMmYiIHN0cm9rZS13aWR0aD0iMTAiLz4KICA8Y2lyY2xlIHI9IjExNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBGNUEwIiBzdHJva2Utd2lkdGg9IjEwIiBzdHJva2UtbGluZWNhcD0icm91bmQiCiAgICAgICAgICBzdHJva2UtZGFzaGFycmF5PSI0NzAgNzIzIiB0cmFuc2Zvcm09InJvdGF0ZSgtOTApIiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSByPSI4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTYyMDJmIiBzdHJva2Utd2lkdGg9IjgiLz4KICA8Y2lyY2xlIHI9IjgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjZBM0QiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogICAgICAgICAgc3Ryb2tlLWRhc2hhcnJheT0iMjEwIDUwMyIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwKSIgb3BhY2l0eT0iMC44NSIvPgogIDxjaXJjbGUgcj0iNiIgZmlsbD0iI0U4RUNGMiIvPgo8L2c+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDMwMCwyMDApIHJvdGF0ZSgzNSkiPgogIDxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSItMTUwIiBzdHJva2U9IiNFOEVDRjIiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC42Ii8+CjwvZz4KPGcgc3Ryb2tlPSIjMTYyMDJmIiBzdHJva2Utd2lkdGg9IjEuNCIgb3BhY2l0eT0iMC43Ij4KICA8bGluZSB4MT0iNTYwIiB5MT0iNzAiIHgyPSI1NjAiIHkyPSIzMzAiLz4KICA8bGluZSB4MT0iNjQwIiB5MT0iNzAiIHgyPSI2NDAiIHkyPSIzMzAiLz4KICA8bGluZSB4MT0iNzIwIiB5MT0iNzAiIHgyPSI3MjAiIHkyPSIzMzAiLz4KICA8bGluZSB4MT0iODAwIiB5MT0iNzAiIHgyPSI4MDAiIHkyPSIzMzAiLz4KPC9nPgo8ZyBmaWxsPSIjMDBFNUZGIj4KICA8cmVjdCB4PSI1NTAiIHk9IjI0MCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjkwIiByeD0iMyIgb3BhY2l0eT0iMC44NSIvPgogIDxyZWN0IHg9IjYzMCIgeT0iMTUwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgwIiByeD0iMyIgb3BhY2l0eT0iMC42Ii8+CiAgPHJlY3QgeD0iNzEwIiB5PSIxOTAiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxNDAiIHJ4PSIzIiBvcGFjaXR5PSIwLjkiLz4KICA8cmVjdCB4PSI3OTAiIHk9IjExMCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjIyMCIgcng9IjMiIGZpbGw9IiNGRjZBM0QiIG9wYWNpdHk9IjAuOCIvPgo8L2c+Cjwvc3ZnPg=="
-IMG_HERO_ML = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBCMTIyMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDUwNzBDIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3dBIiBjeD0iMjAlIiBjeT0iMTUlIiByPSI2NSUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIgc3RvcC1vcGFjaXR5PSIwLjE2Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMEU1RkYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJnbG93QiIgY3g9Ijg1JSIgY3k9IjkwJSIgcj0iNjUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjZBM0QiIHN0b3Atb3BhY2l0eT0iMC4xMiIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QTNEIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNnbG93QSkiLz4KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZ2xvd0IpIi8+CjxsaW5lIHgxPSIyNTIuNCIgeTE9IjI2My4wIiB4Mj0iMjUwLjUiIHkyPSIzMTkuMCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIyNTIuNCIgeTE9IjI2My4wIiB4Mj0iMjA2LjIiIHkyPSIyMDcuNyIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI2MDAuOSIgeTE9IjMxOC44IiB4Mj0iNzA0LjAiIHkyPSIzMDQuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI2MDAuOSIgeTE9IjMxOC44IiB4Mj0iNDk0LjUiIHkyPSIyODQuNSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxOTIuMyIgeTE9IjEwOC40IiB4Mj0iMTYwLjciIHkyPSIxMDYuNiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxOTIuMyIgeTE9IjEwOC40IiB4Mj0iMjQ3LjciIHkyPSIxODYuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxNjAuNyIgeTE9IjEwNi42IiB4Mj0iMTkyLjMiIHkyPSIxMDguNCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxNjAuNyIgeTE9IjEwNi42IiB4Mj0iNTEuOCIgeTI9IjEyMy44IiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjY0MS45IiB5MT0iNzQuMyIgeDI9IjUzNi41IiB5Mj0iMTY0LjYiIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iNjQxLjkiIHkxPSI3NC4zIiB4Mj0iNDc1LjciIHkyPSIxMDIuNyIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI0NzUuNyIgeTE9IjEwMi43IiB4Mj0iNDAzLjYiIHkyPSI5MC4xIiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjQ3NS43IiB5MT0iMTAyLjciIHgyPSI1MDIuNiIgeTI9IjE3Ni4xIiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjI4MS42IiB5MT0iMTc2LjciIHgyPSIyNDcuNyIgeTI9IjE4Ni4yIiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjI4MS42IiB5MT0iMTc2LjciIHgyPSIzMzguNiIgeTI9IjE3Ni4xIiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjcyNi45IiB5MT0iMjM2LjkiIHgyPSI3MTcuNiIgeTI9IjI4My4yIiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjcyNi45IiB5MT0iMjM2LjkiIHgyPSI3MTIuMSIgeTI9IjMwMS40IiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjUxLjgiIHkxPSIxMjMuOCIgeDI9IjE2MC43IiB5Mj0iMTA2LjYiIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iNTEuOCIgeTE9IjEyMy44IiB4Mj0iMTkyLjMiIHkyPSIxMDguNCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxNjAuMyIgeTE9IjMyNi4yIiB4Mj0iMTUwLjYiIHkyPSIyNjAuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxNjAuMyIgeTE9IjMyNi4yIiB4Mj0iMjUwLjUiIHkyPSIzMTkuMCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI3MDQuMCIgeTE9IjMwNC4xIiB4Mj0iNzEyLjEiIHkyPSIzMDEuNCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI3MDQuMCIgeTE9IjMwNC4xIiB4Mj0iNzE3LjYiIHkyPSIyODMuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI3MTcuNiIgeTE9IjI4My4yIiB4Mj0iNzEyLjEiIHkyPSIzMDEuNCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI3MTcuNiIgeTE9IjI4My4yIiB4Mj0iNzA0LjAiIHkyPSIzMDQuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI4MTguNCIgeTE9IjI5OS45IiB4Mj0iODQ4LjMiIHkyPSIyNjQuOSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI4MTguNCIgeTE9IjI5OS45IiB4Mj0iNzE3LjYiIHkyPSIyODMuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIyNTAuNSIgeTE9IjMxOS4wIiB4Mj0iMjUyLjQiIHkyPSIyNjMuMCIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIyNTAuNSIgeTE9IjMxOS4wIiB4Mj0iMTYwLjMiIHkyPSIzMjYuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI0MzkuMiIgeTE9IjI4Ni43IiB4Mj0iNDk0LjUiIHkyPSIyODQuNSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI0MzkuMiIgeTE9IjI4Ni43IiB4Mj0iNTAyLjYiIHkyPSIxNzYuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI1MDIuNiIgeTE9IjE3Ni4xIiB4Mj0iNTM2LjUiIHkyPSIxNjQuNiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI1MDIuNiIgeTE9IjE3Ni4xIiB4Mj0iNDc1LjciIHkyPSIxMDIuNyIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIzMzguNiIgeTE9IjE3Ni4xIiB4Mj0iMjgxLjYiIHkyPSIxNzYuNyIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIzMzguNiIgeTE9IjE3Ni4xIiB4Mj0iMjQ3LjciIHkyPSIxODYuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIyOTcuMyIgeTE9IjY5LjkiIHgyPSIyODEuNiIgeTI9IjE3Ni43IiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjI5Ny4zIiB5MT0iNjkuOSIgeDI9IjQwMy42IiB5Mj0iOTAuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI3MTIuMSIgeTE9IjMwMS40IiB4Mj0iNzA0LjAiIHkyPSIzMDQuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI3MTIuMSIgeTE9IjMwMS40IiB4Mj0iNzE3LjYiIHkyPSIyODMuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI4NDguMyIgeTE9IjI2NC45IiB4Mj0iODE4LjQiIHkyPSIyOTkuOSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI4NDguMyIgeTE9IjI2NC45IiB4Mj0iNzI2LjkiIHkyPSIyMzYuOSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI0OTQuNSIgeTE9IjI4NC41IiB4Mj0iNDM5LjIiIHkyPSIyODYuNyIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI0OTQuNSIgeTE9IjI4NC41IiB4Mj0iNTAyLjYiIHkyPSIxNzYuMSIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxNTAuNiIgeTE9IjI2MC4xIiB4Mj0iMTYwLjMiIHkyPSIzMjYuMiIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSIxNTAuNiIgeTE9IjI2MC4xIiB4Mj0iMjA2LjIiIHkyPSIyMDcuNyIgc3Ryb2tlPSIjMWMzMDQwIiBzdHJva2Utd2lkdGg9IjEuMiIgb3BhY2l0eT0iMC43Ii8+CjxsaW5lIHgxPSI0MDMuNiIgeTE9IjkwLjEiIHgyPSI0NzUuNyIgeTI9IjEwMi43IiBzdHJva2U9IiMxYzMwNDAiIHN0cm9rZS13aWR0aD0iMS4yIiBvcGFjaXR5PSIwLjciLz4KPGxpbmUgeDE9IjQwMy42IiB5MT0iOTAuMSIgeDI9IjMzOC42IiB5Mj0iMTc2LjEiIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iMjA2LjIiIHkxPSIyMDcuNyIgeDI9IjI0Ny43IiB5Mj0iMTg2LjIiIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iMjA2LjIiIHkxPSIyMDcuNyIgeDI9IjI1Mi40IiB5Mj0iMjYzLjAiIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iMjQ3LjciIHkxPSIxODYuMiIgeDI9IjI4MS42IiB5Mj0iMTc2LjciIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iMjQ3LjciIHkxPSIxODYuMiIgeDI9IjIwNi4yIiB5Mj0iMjA3LjciIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iNTM2LjUiIHkxPSIxNjQuNiIgeDI9IjUwMi42IiB5Mj0iMTc2LjEiIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8bGluZSB4MT0iNTM2LjUiIHkxPSIxNjQuNiIgeDI9IjQ3NS43IiB5Mj0iMTAyLjciIHN0cm9rZT0iIzFjMzA0MCIgc3Ryb2tlLXdpZHRoPSIxLjIiIG9wYWNpdHk9IjAuNyIvPgo8Y2lyY2xlIGN4PSIyNTIuNCIgY3k9IjI2My4wIiByPSI0IiBmaWxsPSIjRkY2QTNEIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNjAwLjkiIGN5PSIzMTguOCIgcj0iNSIgZmlsbD0iIzAwRTVGRiIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjE5Mi4zIiBjeT0iMTA4LjQiIHI9IjYiIGZpbGw9IiMwMEU1RkYiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSIxNjAuNyIgY3k9IjEwNi42IiByPSI3IiBmaWxsPSIjMDBGNUEwIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNjQxLjkiIGN5PSI3NC4zIiByPSI0IiBmaWxsPSIjMDBFNUZGIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNDc1LjciIGN5PSIxMDIuNyIgcj0iNSIgZmlsbD0iIzAwRTVGRiIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjI4MS42IiBjeT0iMTc2LjciIHI9IjYiIGZpbGw9IiMwMEY1QTAiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSI3MjYuOSIgY3k9IjIzNi45IiByPSI3IiBmaWxsPSIjRkY2QTNEIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNTEuOCIgY3k9IjEyMy44IiByPSI0IiBmaWxsPSIjMDBFNUZGIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iMTYwLjMiIGN5PSIzMjYuMiIgcj0iNSIgZmlsbD0iIzAwRjVBMCIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjcwNC4wIiBjeT0iMzA0LjEiIHI9IjYiIGZpbGw9IiMwMEU1RkYiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSI3MTcuNiIgY3k9IjI4My4yIiByPSI3IiBmaWxsPSIjMDBFNUZGIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iODE4LjQiIGN5PSIyOTkuOSIgcj0iNCIgZmlsbD0iIzAwRjVBMCIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjI1MC41IiBjeT0iMzE5LjAiIHI9IjUiIGZpbGw9IiMwMEU1RkYiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSI0MzkuMiIgY3k9IjI4Ni43IiByPSI2IiBmaWxsPSIjRkY2QTNEIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNTAyLjYiIGN5PSIxNzYuMSIgcj0iNyIgZmlsbD0iIzAwRjVBMCIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjMzOC42IiBjeT0iMTc2LjEiIHI9IjQiIGZpbGw9IiMwMEU1RkYiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSIyOTcuMyIgY3k9IjY5LjkiIHI9IjUiIGZpbGw9IiMwMEU1RkYiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSI3MTIuMSIgY3k9IjMwMS40IiByPSI2IiBmaWxsPSIjMDBGNUEwIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iODQ4LjMiIGN5PSIyNjQuOSIgcj0iNyIgZmlsbD0iIzAwRTVGRiIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjQ5NC41IiBjeT0iMjg0LjUiIHI9IjQiIGZpbGw9IiMwMEU1RkYiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSIxNTAuNiIgY3k9IjI2MC4xIiByPSI1IiBmaWxsPSIjRkY2QTNEIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNDAzLjYiIGN5PSI5MC4xIiByPSI2IiBmaWxsPSIjMDBFNUZGIiBvcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iMjA2LjIiIGN5PSIyMDcuNyIgcj0iNyIgZmlsbD0iIzAwRTVGRiIgb3BhY2l0eT0iMC45Ii8+CjxjaXJjbGUgY3g9IjI0Ny43IiBjeT0iMTg2LjIiIHI9IjQiIGZpbGw9IiMwMEY1QTAiIG9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSI1MzYuNSIgY3k9IjE2NC42IiByPSI1IiBmaWxsPSIjMDBFNUZGIiBvcGFjaXR5PSIwLjkiLz48L3N2Zz4="
-IMG_HERO_PLAN = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj4KPGRlZnM+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzBCMTIyMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDUwNzBDIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmFkaWFsR3JhZGllbnQgaWQ9Imdsb3dBIiBjeD0iMjAlIiBjeT0iMTUlIiByPSI2NSUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIgc3RvcC1vcGFjaXR5PSIwLjE2Ii8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMEU1RkYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJnbG93QiIgY3g9Ijg1JSIgY3k9IjkwJSIgcj0iNjUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGRjZBM0QiIHN0b3Atb3BhY2l0eT0iMC4xMiIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QTNEIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2JnKSIvPgo8cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNnbG93QSkiLz4KPHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZ2xvd0IpIi8+Cgo8ZyBzdHJva2U9IiMxNjIwMmYiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iMC42Ij4KICA8bGluZSB4MT0iMCIgeTE9IjEwMCIgeDI9IjkwMCIgeTI9IjEwMCIvPgogIDxsaW5lIHgxPSIwIiB5MT0iMjAwIiB4Mj0iOTAwIiB5Mj0iMjAwIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzMDAiIHgyPSI5MDAiIHkyPSIzMDAiLz4KPC9nPgo8cGF0aCBkPSJNMCwzNDAgQzEyMCwzNDAgMTMwLDI2MCAyMjAsMjYwIEMzMTAsMjYwIDMyMCwxMjAgNDIwLDEyMCBDNTIwLDEyMCA1MzAsMjIwIDYzMCwyMjAgQzczMCwyMjAgNzQwLDYwIDkwMCw2MCIKICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDBFNUZGIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC45Ii8+CjxwYXRoIGQ9Ik0wLDM0MCBDMTIwLDM0MCAxMzAsMjYwIDIyMCwyNjAgQzMxMCwyNjAgMzIwLDEyMCA0MjAsMTIwIEM1MjAsMTIwIDUzMCwyMjAgNjMwLDIyMCBDNzMwLDIyMCA3NDAsNjAgOTAwLDYwIgogICAgICBmaWxsPSJub25lIiBzdHJva2U9IiMwMEU1RkYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjI1IiBzdHJva2UtZGFzaGFycmF5PSIxIDE0IiAvPgo8Y2lyY2xlIGN4PSIwIiBjeT0iMzQwIiByPSI3IiBmaWxsPSIjMDBGNUEwIi8+CjxjaXJjbGUgY3g9IjIyMCIgY3k9IjI2MCIgcj0iNiIgZmlsbD0iI0U4RUNGMiIgb3BhY2l0eT0iMC44NSIvPgo8Y2lyY2xlIGN4PSI0MjAiIGN5PSIxMjAiIHI9IjYiIGZpbGw9IiNFOEVDRjIiIG9wYWNpdHk9IjAuODUiLz4KPGNpcmNsZSBjeD0iNjMwIiBjeT0iMjIwIiByPSI2IiBmaWxsPSIjRThFQ0YyIiBvcGFjaXR5PSIwLjg1Ii8+CjxjaXJjbGUgY3g9IjkwMCIgY3k9IjYwIiByPSI4IiBmaWxsPSIjRkY2QTNEIi8+CjxjaXJjbGUgY3g9IjkwMCIgY3k9IjYwIiByPSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkY2QTNEIiBzdHJva2Utd2lkdGg9IjEuNSIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPg=="
+# Nuove Immagini Astratte Senza Contorno
+IMG_HERO_ANALISI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImcxIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwRjVBMCIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwODBCMTIiLz48cGF0aCBkPSJNLTEwMCwyMDAgUTIwMCw0MDAgNDUwLDIwMCBUMTAwMCwyMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnMSkiIHN0cm9rZS13aWR0aD0iNDAiIG9wYWNpdHk9IjAuMyIvPjxwYXRoIGQ9Ik0tMTAwLDI1MCBRMjAwLDUwIDQ1MCwyNTAgVDEwMDAsMjUwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZzEpIiBzdHJva2Utd2lkdGg9IjIwIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSI0NTAiIGN5PSIyMDAiIHI9IjE1MCIgZmlsbD0idXJsKCNnMSkiIG9wYWNpdHk9IjAuMiIvPjwvc3ZnPg=="
+IMG_HERO_STATS = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImcyIiB4MT0iMCIgeTE9IjEiIHgyPSIxIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGNkEzRCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGQjAyMCIgc3RvcC1vcGFjaXR5PSIwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwODBCMTIiLz48cG9seWdvbiBwb2ludHM9IjAsNDAwIDIwMCwxMDAgNDUwLDMwMCA3MDAsNTAgOTAwLDI1MCA5MDAsNDAwIiBmaWxsPSJ1cmwoI2cyKSIgb3BhY2l0eT0iMC40Ii8+PHBvbHlnb24gcG9pbnRzPSIwLDQwMCAzMDAsMjAwIDUwMCwzNTAgODAwLDE1MCA5MDAsMzAwIDkwMCw0MDAiIGZpbGw9InVybCgjZzIpIiBvcGFjaXR5PSIwLjYiLz48L3N2Zz4="
+IMG_HERO_KPI = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImczIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBFNUZGIiBzdG9wLW9wYWNpdHk9IjAuOCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwRTVGRiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9Imc0Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDBGNUEwIiBzdG9wLW9wYWNpdHk9IjAuNiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwRjVBMCIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwODBCMTIiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIyMDAiIHI9IjI1MCIgZmlsbD0idXJsKCNnMykiLz48Y2lyY2xlIGN4PSI2NTAiIGN5PSIyNTAiIHI9IjMwMCIgZmlsbD0idXJsKCNnNCkiLz48L3N2Zz4="
+IMG_HERO_ML = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9Imc1Ij48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjRkZCMDIwIiBzdG9wLW9wYWNpdHk9IjAuNSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZGQjAyMCIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwODBCMTIiLz48Y2lyY2xlIGN4PSI0NTAiIGN5PSIyMDAiIHI9IjMwMCIgZmlsbD0idXJsKCNnNSkiLz48cGF0aCBkPSJNMTAwLDEwMCBMMzAwLDI1MCBMNTAwLDE1MCBMNzAwLDMwMCBMODUwLDEwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZCMDIwIiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iOCIgZmlsbD0iI0ZGQjAyMCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjI1MCIgcj0iMTUiIGZpbGw9IiNGRkIwMjAiIG9wYWNpdHk9IjAuOCIvPjxjaXJjbGUgY3g9IjUwMCIgY3k9IjE1MCIgcj0iMTAiIGZpbGw9IiNGRkIwMjAiLz48Y2lyY2xlIGN4PSI3MDAiIGN5PSIzMDAiIHI9IjIwIiBmaWxsPSIjRkZCMDIwIiBvcGFjaXR5PSIwLjYiLz48Y2lyY2xlIGN4PSI4NTAiIGN5PSIzMDAiIHI9IjUiIGZpbGw9IiNGRkIwMjAiLz48L3N2Zz4="
+IMG_HERO_PLAN = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5MDAgNDAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9Imc2IiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwRjVBMCIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDBFNUZGIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjRkY2QTNEIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjkwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwODBCMTIiLz48cGF0aCBkPSJNMCwyMDAgQzMwMCwzMDAgNjAwLDEwMCA5MDAsMjAwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZzYpIiBzdHJva2Utd2lkdGg9IjMwIiBvcGFjaXR5PSIwLjQuLz48cGF0aCBkPSJNMCwyMjAgQzMwMCwzMjAgNjAwLDEyMCA5MDAsMjIwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZzYpIiBzdHJva2Utd2lkdGg9IjE1IiBvcGFjaXR5PSIwLjYiLz48cGF0aCBkPSJNMCwyNDAgQzMwMCwzNDAgNjAwLDE0MCA5MDAsMjQwIiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZzYpIiBzdHJva2Utd2lkdGg9IjUiIG9wYWNpdHk9IjAuOSIvPjwvc3ZnPg=="
 
 # ----------------- SIDEBAR -----------------
 with st.sidebar:
@@ -325,13 +326,16 @@ with st.sidebar:
         ), unsafe_allow_html=True)
 
     st.markdown("---")
-    pagina = st.sidebar.radio("Menu",
-        ["Analisi Completa", "Statistiche", "KPI Dashboard", "ML Explained", "Consiglio Finale"],
+    
+    st.markdown("<h3 style='color: #00E5FF; font-size: 0.8em; letter-spacing: 0.15em; text-transform: uppercase;'>Navigazione</h3>", unsafe_allow_html=True)
+    pagina = st.sidebar.selectbox(
+        "Menu",
+        ["ANALISI", "STATISTICHE", "KPI DASHBOARD", "ML EXPLAINED", "CONSIGLIO FINALE"],
         label_visibility="collapsed"
     )
 
 # ----------------- PAGINA 1: ANALISI -----------------
-if pagina == "Analisi Completa":
+if pagina == "ANALISI":
     header_block(
         "Modulo 01 — Acquisizione Dati",
         "Stato di Forma, Oggi.",
@@ -412,7 +416,7 @@ if pagina == "Analisi Completa":
             """, unsafe_allow_html=True)
 
 # ----------------- PAGINA 2: STATISTICHE -----------------
-elif pagina == "Statistiche":
+elif pagina == "STATISTICHE":
     header_block(
         "Modulo 02 — Analytics Storico",
         "90 Giorni di Dati Grezzi.",
@@ -442,14 +446,14 @@ elif pagina == "Statistiche":
             df_weekly['Giorno'] = df_weekly['Giorno'].astype(str)
             fig1 = px.bar(df_weekly, x='Giorno', y='Distanza (km)', height=300, color='Distanza (km)', color_continuous_scale=[[0,'#0E4A57'],[1,'#00E5FF']])
             st.plotly_chart(style_fig(fig1), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Verifica che le barre non facciano salti maggiori del 10% da una settimana all'altra. Un picco improvviso porta a infiammazioni tendinee.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Verifica che le barre non facciano salti maggiori del 10% da una settimana all'altra. Un picco improvviso porta a infiammazioni tendinee.</div>", unsafe_allow_html=True)
 
             st.markdown("**Carico per Giorno della Settimana**")
             df['Giorno_Settimana'] = df['Giorno'].dt.day_name()
             df_day = df.groupby('Giorno_Settimana')['Distanza (km)'].mean().reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).reset_index()
             fig_day = px.bar(df_day, x='Giorno_Settimana', y='Distanza (km)', height=300, color_discrete_sequence=['#00E5FF'])
             st.plotly_chart(style_fig(fig_day), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Visualizza la tua routine. Assicurati che ai giorni con barre alte seguano giorni con barre basse o assenti (recupero attivo).</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Visualizza la tua routine. Assicurati che ai giorni con barre alte seguano giorni con barre basse o assenti (recupero attivo).</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Distanza Cumulativa**")
@@ -457,7 +461,7 @@ elif pagina == "Statistiche":
             fig_cum = px.line(df, x='Giorno', y='Cumulativa', height=300, markers=True)
             fig_cum.update_traces(line_color="#00E5FF")
             st.plotly_chart(style_fig(fig_cum), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Una linea retta indica costanza. Una linea piatta indica stop o infortuni.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Una linea retta indica costanza. Una linea piatta indica stop o infortuni.</div>", unsafe_allow_html=True)
 
             record_km = df.loc[df['Distanza (km)'].idxmax()]
             record_vel = df.loc[df['Velocità (km/h)'].idxmax()]
@@ -489,7 +493,7 @@ elif pagina == "Statistiche":
             st.markdown("**FC Media vs Velocità**")
             fig2 = px.scatter(df, x='Velocità (km/h)', y='FC Media', size='Distanza (km)', color='RPE', color_continuous_scale=[[0,'#0E4A57'],[0.5,'#00E5FF'],[1,'#FF6A3D']], height=300)
             st.plotly_chart(style_fig(fig2), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Più i punti scendono verso il basso a destra, più il tuo cuore è efficiente (vai veloce faticando poco). I punti arancioni sono i lavori massimali.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Più i punti scendono verso il basso a destra, più il tuo cuore è efficiente (vai veloce faticando poco). I punti arancioni sono i lavori massimali.</div>", unsafe_allow_html=True)
 
             st.markdown("**Ripartizione Zone Cardiache**")
             bins = [0, 120, 140, 160, 180, 200]
@@ -498,7 +502,7 @@ elif pagina == "Statistiche":
             zone_counts = df['Zone'].value_counts().reset_index()
             fig_zones = px.pie(zone_counts, values='count', names='Zone', hole=0.6, height=300, color_discrete_sequence=['#00E5FF','#00B8D4','#0E4A57','#FFB020','#FF6A3D'])
             st.plotly_chart(style_fig(fig_zones), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Un allenamento sano prevede 80% in Z1/Z2 e 20% in Z4/Z5. Evita di rimanere intrappolato in Z3 (zona grigia), che stanca senza allenare efficacemente.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Un allenamento sano prevede 80% in Z1/Z2 e 20% in Z4/Z5. Evita di rimanere intrappolato in Z3 (zona grigia), che stanca senza allenare efficacemente.</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Distribuzione RPE**")
@@ -506,7 +510,7 @@ elif pagina == "Statistiche":
             fig3.add_vline(x=3.5, line_dash="dash", line_color="#00F5A0")
             fig3.add_vline(x=6.5, line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig3), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Mostra quante volte hai spinto al massimo (oltre la linea arancione) e quante volte hai recuperato (sotto la linea verde).</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Mostra quante volte hai spinto al massimo (oltre la linea arancione) e quante volte hai recuperato (sotto la linea verde).</div>", unsafe_allow_html=True)
 
     with tab3:
         col1, col2 = st.columns(2)
@@ -517,13 +521,13 @@ elif pagina == "Statistiche":
             fig_sleep.add_hline(y=7.5, line_dash="dash", line_color="#00F5A0")
             fig_sleep.add_hline(y=6.5, line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig_sleep), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Cerca di stare sempre sopra la linea verde. Le discese verso la linea arancione corrispondono a cali di prestazione muscolare.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Cerca di stare sempre sopra la linea verde. Le discese verso la linea arancione corrispondono a cali di prestazione muscolare.</div>", unsafe_allow_html=True)
 
             st.markdown("**Debito di Sonno (Rolling 7gg)**")
             df['Debito'] = df['Ore Sonno'].apply(lambda x: max(0, 7.5 - x)).rolling(7).sum()
             fig_debt = px.area(df, x='Giorno', y='Debito', height=300, color_discrete_sequence=['#FF6A3D'])
             st.plotly_chart(style_fig(fig_debt), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Quest'area è fatica accumulata. Se il debito supera le 5 ore in una settimana, il rischio di strappi o contratture decuplica.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Quest'area è fatica accumulata. Se il debito supera le 5 ore in una settimana, il rischio di strappi o contratture decuplica.</div>", unsafe_allow_html=True)
 
         with col2:
             st.markdown("**Sonno vs Sforzo**")
@@ -531,7 +535,7 @@ elif pagina == "Statistiche":
             fig4.add_hline(y=7, line_dash="dash", line_color="#FFB020")
             fig4.add_vline(x=6.5, line_dash="dash", line_color="#FFB020")
             st.plotly_chart(style_fig(fig4), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Per l'atleta:</strong> Il quadrante in alto a sinistra (poco sonno, alto sforzo) è la 'zona critica'. Evita che i punti cadano in quell'area.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Il quadrante in alto a sinistra (poco sonno, alto sforzo) è la 'zona critica'. Evita che i punti cadano in quell'area.</div>", unsafe_allow_html=True)
 
     with tab4:
         st.markdown("**Ultimi 15 Allenamenti**")
@@ -547,10 +551,10 @@ elif pagina == "Statistiche":
         st.plotly_chart(style_fig(fig_table), use_container_width=True)
 
 # ----------------- PAGINA 3: KPI DASHBOARD -----------------
-elif pagina == "KPI Dashboard":
+elif pagina == "KPI DASHBOARD":
     header_block(
         "Modulo 03 — Live Monitoring",
-        "Il Tuo Cruscotto Prestazionale.",
+        "IL TUO CRUSCOTTO PRESTAZIONALE",
         "Bilancio carico/recupero, rischio infortunio e profilo atletico calcolati sui parametri appena inseriti.",
         IMG_HERO_KPI, "Real-Time Dashboard"
     )
@@ -570,7 +574,7 @@ elif pagina == "KPI Dashboard":
         st.plotly_chart(style_fig(fig_balance), use_container_width=True)
         st.markdown("""
         <div class='explain-text' style='margin-bottom: 25px;'>
-        <strong>Come leggerlo:</strong> La linea verde rappresenta la tua "Batteria" (quanto dormi e recuperi). L'area arancione è quanto sforzo spremi dal tuo corpo. Finché la linea verde avvolge i picchi arancioni, sei in stato di Supercompensazione (migliori). Se l'arancione sta costantemente sopra il verde, stai andando in Overtraining.
+        La linea verde rappresenta la tua "Batteria" (quanto dormi e recuperi). L'area arancione è quanto sforzo spremi dal tuo corpo. Finché la linea verde avvolge i picchi arancioni, sei in stato di Supercompensazione (migliori). Se l'arancione sta costantemente sopra il verde, stai andando in Overtraining.
         </div>
         """, unsafe_allow_html=True)
 
@@ -672,7 +676,7 @@ elif pagina == "KPI Dashboard":
             """, unsafe_allow_html=True)
 
 # ----------------- PAGINA 4: ML EXPLAINED -----------------
-elif pagina == "ML Explained":
+elif pagina == "ML EXPLAINED":
     header_block(
         "Modulo 04 — Model Explainability",
         "Dentro il Motore Predittivo.",
@@ -734,7 +738,7 @@ elif pagina == "ML Explained":
             <div class='explain-text'>
             <strong>Cosa Calcola:</strong> Misura quale parametro scatena più infortuni nel TUO corpo.<br>
             <strong>Come lo calcola:</strong> Rimuove un dato alla volta dalle valutazioni e vede quanto peggiora l'accuratezza del modello.<br>
-            <strong>Spiegazione Risultato:</strong> La barra più lunga rappresenta il tuo personale punto debole (es. Se è il Sonno, significa che la tua genetica tollera male i recuperi brevi).
+            La barra più lunga rappresenta il tuo personale punto debole (es. Se è il Sonno, significa che la tua genetica tollera male i recuperi brevi).
             </div>
             """, unsafe_allow_html=True)
 
@@ -748,7 +752,7 @@ elif pagina == "ML Explained":
             <div class='explain-text'>
             <strong>Cosa Calcola:</strong> Analizza i "falsi allarmi" e le "sviste" del modello nel passato.<br>
             <strong>Come lo calcola:</strong> Confronta ciò che è successo realmente nei 90 giorni con le previsioni fatte "alla cieca" dall'AI.<br>
-            <strong>Spiegazione Risultato:</strong> I quadrati sulla diagonale principale indicano i successi. Se vedi numeri alti nei quadrati opposti, il modello sta commettendo errori.
+            I quadrati sulla diagonale principale indicano i successi. Se vedi numeri alti nei quadrati opposti, il modello sta commettendo errori.
             </div>
             """, unsafe_allow_html=True)
 
@@ -763,7 +767,7 @@ elif pagina == "ML Explained":
             <div class='explain-text'>
             <strong>Cosa Calcolano:</strong> Le metriche di affidabilità del test.<br>
             <strong>Come lo calcolano:</strong> Formule statistiche classiche sui veri e falsi positivi ottenuti dalla Matrice di Confusione.<br>
-            <strong>Spiegazione Risultato:</strong> Guarda in particolare la <strong>Recall</strong>: se è alta (vicina al 100%), significa che l'AI riesce a individuare praticamente tutti gli infortuni reali prima che accadano.
+            Guarda in particolare la <strong>Recall</strong>: se è alta (vicina al 100%), significa che l'AI riesce a individuare praticamente tutti gli infortuni reali prima che accadano.
             </div>
             """, unsafe_allow_html=True)
 
@@ -791,7 +795,7 @@ elif pagina == "ML Explained":
                 <div class='explain-text'>
                 <strong>Cosa Calcola:</strong> La tua esatta percentuale di rischio infortunio oggi.<br>
                 <strong>Come lo calcola:</strong> Prende i {dist}km previsti, le tue {r['ore_sonno']}h di sonno e l'RPE di {r['rpe_previsto']} e fa votare i 100 alberi. <br>
-                <strong>Spiegazione Risultato:</strong> In questo momento, <strong>{votes_rischio} alberi su 100</strong> ritengono che tu sia a forte rischio infortunio con i parametri correnti. Modifica l'allenamento se superi i 60 voti.
+                In questo momento, <strong>{votes_rischio} alberi su 100</strong> ritengono che tu sia a forte rischio infortunio con i parametri correnti. Modifica l'allenamento se superi i 60 voti.
                 </div>
                 """, unsafe_allow_html=True)
             else:
@@ -859,12 +863,12 @@ elif pagina == "ML Explained":
             fig_proj.update_traces(line_color=sim_color, fillcolor="rgba(255,106,61,0.15)" if sim_color == "#FF6A3D" else "rgba(0,245,160,0.15)")
             fig_proj.update_layout(height=300)
             st.plotly_chart(style_fig(fig_proj), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Nota:</strong> Proiezione indicativa basata sull'inerzia del trend attuale, non una previsione clinica: usala solo come guida direzionale.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Proiezione indicativa basata sull'inerzia del trend attuale, non una previsione clinica: usala solo come guida direzionale.</div>", unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Errore ML: {str(e)}")
 
 # ----------------- PAGINA 5: CONSIGLIO FINALE -----------------
-elif pagina == "Consiglio Finale":
+elif pagina == "CONSIGLIO FINALE":
     header_block(
         "Modulo 05 — Action Plan",
         "Il Tuo Piano d'Azione.",
@@ -985,13 +989,34 @@ elif pagina == "Consiglio Finale":
         col_a1, col_a2, col_a3 = st.columns(3)
         with col_a1:
             sb, sc = ("SOTTO MEDIA", "#FF6A3D") if sonno_vs_media < -0.5 else ("SOPRA MEDIA", "#00F5A0") if sonno_vs_media > 0.5 else ("NELLA MEDIA", "#8792A3")
-            st.markdown(f"<div class='kpi-card'><p style='color:{sc}; font-weight:bold; font-family:\"JetBrains Mono\",monospace; font-size:0.78em; letter-spacing:0.08em;'>{sb}</p><h1 style='font-family:\"JetBrains Mono\",monospace;'>{r['ore_sonno']:.1f}h</h1><p style='font-family:\"Inter\",sans-serif; color:#8792A3;'>vs media {media_sonno_90:.1f}h</p></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='kpi-card'>
+                <p style='color:{sc}; font-weight:bold; font-family:"JetBrains Mono",monospace; font-size:0.78em; letter-spacing:0.08em;'>{sb}</p>
+                <h1 style='font-family:"JetBrains Mono",monospace;'>{r['ore_sonno']:.1f}h</h1>
+                <p style='font-family:"Inter",sans-serif; color:#8792A3;'>vs media {media_sonno_90:.1f}h</p>
+                <p style='font-family:"Inter",sans-serif; color:#566178; font-size:0.85em; margin-top:8px;'>Il tempo dedicato alla rigenerazione cellulare. Un deficit rallenta il recupero muscolare.</p>
+            </div>
+            """, unsafe_allow_html=True)
         with col_a2:
             stb, stc = ("SOTTO MEDIA", "#00F5A0") if stress_vs_media < -1 else ("SOPRA MEDIA", "#FF6A3D") if stress_vs_media > 1 else ("NELLA MEDIA", "#8792A3")
-            st.markdown(f"<div class='kpi-card'><p style='color:{stc}; font-weight:bold; font-family:\"JetBrains Mono\",monospace; font-size:0.78em; letter-spacing:0.08em;'>{stb}</p><h1 style='font-family:\"JetBrains Mono\",monospace;'>{r['stress_lavoro']}/10</h1><p style='font-family:\"Inter\",sans-serif; color:#8792A3;'>vs media {media_stress_90:.1f}/10</p></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='kpi-card'>
+                <p style='color:{stc}; font-weight:bold; font-family:"JetBrains Mono",monospace; font-size:0.78em; letter-spacing:0.08em;'>{stb}</p>
+                <h1 style='font-family:"JetBrains Mono",monospace;'>{r['stress_lavoro']}/10</h1>
+                <p style='font-family:"Inter",sans-serif; color:#8792A3;'>vs media {media_stress_90:.1f}/10</p>
+                <p style='font-family:"Inter",sans-serif; color:#566178; font-size:0.85em; margin-top:8px;'>Il carico cognitivo e nervoso accumulato. Uno stress alto alza il cortisolo e il rischio di infortuni.</p>
+            </div>
+            """, unsafe_allow_html=True)
         with col_a3:
             rpb, rpc = ("SOTTO MEDIA", "#00F5A0") if rpe_vs_media < -1 else ("SOPRA MEDIA", "#FF6A3D") if rpe_vs_media > 1 else ("NELLA MEDIA", "#8792A3")
-            st.markdown(f"<div class='kpi-card'><p style='color:{rpc}; font-weight:bold; font-family:\"JetBrains Mono\",monospace; font-size:0.78em; letter-spacing:0.08em;'>{rpb}</p><h1 style='font-family:\"JetBrains Mono\",monospace;'>{r['rpe_previsto']}/10</h1><p style='font-family:\"Inter\",sans-serif; color:#8792A3;'>vs media {media_rpe_90:.1f}/10</p></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='kpi-card'>
+                <p style='color:{rpc}; font-weight:bold; font-family:"JetBrains Mono",monospace; font-size:0.78em; letter-spacing:0.08em;'>{rpb}</p>
+                <h1 style='font-family:"JetBrains Mono",monospace;'>{r['rpe_previsto']}/10</h1>
+                <p style='font-family:"Inter",sans-serif; color:#8792A3;'>vs media {media_rpe_90:.1f}/10</p>
+                <p style='font-family:"Inter",sans-serif; color:#566178; font-size:0.85em; margin-top:8px;'>Lo sforzo programmato per la sessione. Valori superiori alla media indicano un forte sovraccarico sistemico.</p>
+            </div>
+            """, unsafe_allow_html=True)
 
         st.subheader("Grafici Trend - Ultimi 30 Giorni")
         df_recent = df.tail(30).copy()
@@ -1000,31 +1025,31 @@ elif pagina == "Consiglio Finale":
             fig_sonno = px.line(df_recent, y='Ore Sonno', height=300, markers=True, title="Sonno Trend", color_discrete_sequence=['#00E5FF'])
             fig_sonno.add_hline(y=r['ore_sonno'], line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig_sonno), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> La linea arancione è il sonno di oggi: confrontalo con le ultime settimane per capire se stai recuperando meglio o peggio del solito.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>La linea arancione è il sonno di oggi: confrontalo con le ultime settimane per capire se stai recuperando meglio o peggio del solito.</div>", unsafe_allow_html=True)
         with col_g2:
             fig_rpe = px.line(df_recent, y='RPE', height=300, markers=True, title="RPE Trend", color_discrete_sequence=['#00E5FF'])
             fig_rpe.add_hline(y=r['rpe_previsto'], line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig_rpe), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> La linea arancione è lo sforzo previsto per oggi: se è ben sopra la media recente, il carico odierno è superiore al solito.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>La linea arancione è lo sforzo previsto per oggi: se è ben sopra la media recente, il carico odierno è superiore al solito.</div>", unsafe_allow_html=True)
         with col_g3:
             fig_stress = px.line(df_recent, y='Stress Lavoro', height=300, markers=True, title="Stress Trend", color_discrete_sequence=['#FFB020'])
             fig_stress.add_hline(y=r['stress_lavoro'], line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig_stress), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Lo stress dichiarato oggi (linea arancione) incide sul recupero tanto quanto l'allenamento stesso: tienilo d'occhio nel tempo.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Lo stress dichiarato oggi (linea arancione) incide sul recupero tanto quanto l'allenamento stesso: tienilo d'occhio nel tempo.</div>", unsafe_allow_html=True)
         col_g4, col_g5 = st.columns(2)
         with col_g4:
             fig_scatter = px.scatter(df_recent, x='Ore Sonno', y='RPE', size='Distanza (km)', color='FC Media', height=350, title="Relazione Sonno-RPE-FC", color_continuous_scale=[[0,'#0E4A57'],[1,'#00E5FF']])
             fig_scatter.add_hline(y=r['rpe_previsto'], line_dash="dash", line_color="#FF6A3D")
             fig_scatter.add_vline(x=r['ore_sonno'], line_dash="dash", line_color="#FF6A3D")
             st.plotly_chart(style_fig(fig_scatter), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Ogni punto è un allenamento passato; le linee arancioni indicano dove si colloca oggi tra sonno e sforzo rispetto allo storico.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Ogni punto è un allenamento passato; le linee arancioni indicano dove si colloca oggi tra sonno e sforzo rispetto allo storico.</div>", unsafe_allow_html=True)
         with col_g5:
             fig_box = go.Figure()
             fig_box.add_trace(go.Box(y=df['Ore Sonno'], name='Sonno 90gg', marker_color='#00E5FF'))
             fig_box.add_trace(go.Box(y=[r['ore_sonno']], name='Oggi', marker_color='#FF6A3D'))
             fig_box.update_layout(height=350, title="Sonno: Oggi vs Storico")
             st.plotly_chart(style_fig(fig_box), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Il box mostra la variabilità storica del sonno: il punto arancione è il valore di oggi rispetto alla tua norma.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Il box mostra la variabilità storica del sonno: il punto arancione è il valore di oggi rispetto alla tua norma.</div>", unsafe_allow_html=True)
 
         st.markdown("<br><hr><br>", unsafe_allow_html=True)
 
@@ -1038,7 +1063,7 @@ elif pagina == "Consiglio Finale":
             fig_pace.update_traces(line_color="#FF6A3D")
             fig_pace.update_layout(height=300)
             st.plotly_chart(style_fig(fig_pace), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Riscalda il motore nei primi 10 minuti (rampa dolce) per non creare acido lattico in eccesso. Mantieni il blocco centrale stabile senza picchi.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Riscalda il motore nei primi 10 minuti (rampa dolce) per non creare acido lattico in eccesso. Mantieni il blocco centrale stabile senza picchi.</div>", unsafe_allow_html=True)
         with g_col2:
             hours = ["+0h", "+6h", "+12h", "+24h", "+48h"]
             rec_y = [30, 55, 75, 95, 100] if risk_score < 50 else [15, 30, 50, 70, 90]
@@ -1046,7 +1071,7 @@ elif pagina == "Consiglio Finale":
             fig_rec.update_traces(marker_color="#00F5A0")
             fig_rec.update_layout(height=300)
             st.plotly_chart(style_fig(fig_rec), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Quanto ci metteranno i tuoi muscoli a rigenerarsi dopo questo allenamento. Fino al raggiungimento dell'80% non inserire lavori di forza.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Quanto ci metteranno i tuoi muscoli a rigenerarsi dopo questo allenamento. Fino al raggiungimento dell'80% non inserire lavori di forza.</div>", unsafe_allow_html=True)
         g_col3, g_col4 = st.columns(2)
         with g_col3:
             fig_acwr = go.Figure(data=[
@@ -1055,12 +1080,12 @@ elif pagina == "Consiglio Finale":
             ])
             fig_acwr.update_layout(title="3. Bilancio Acuto vs Cronico (ACWR)", barmode='group', height=300)
             st.plotly_chart(style_fig(fig_acwr), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Mostra se stai correndo troppo rispetto a quello a cui sei abituato. Un rapporto tra la barra ambra e ciano intorno a 1.15 è ottimale per migliorare. Oltre l'1.3 è zona infortuni.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Mostra se stai correndo troppo rispetto a quello a cui sei abituato. Un rapporto tra la barra ambra e ciano intorno a 1.15 è ottimale per migliorare. Oltre l'1.3 è zona infortuni.</div>", unsafe_allow_html=True)
         with g_col4:
             fig_pie2 = px.pie(values=[70, 20, 10], names=['Aerobico Base', 'Soglia Lattata', 'Anaerobico'], title="4. Ripartizione Energetica Richiesta", hole=0.6, color_discrete_sequence=['#00E5FF', '#FFB020', '#FF6A3D'])
             fig_pie2.update_layout(height=300)
             st.plotly_chart(style_fig(fig_pie2), use_container_width=True)
-            st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Su cosa lavorerà il tuo metabolismo oggi. In base a questo capisci quanti carboidrati (Soglia) o grassi (Aerobico) intaccherai.</div>", unsafe_allow_html=True)
+            st.markdown("<div class='explain-text'>Su cosa lavorerà il tuo metabolismo oggi. In base a questo capisci quanti carboidrati (Soglia) o grassi (Aerobico) intaccherai.</div>", unsafe_allow_html=True)
 
         fig_sleep_impact = go.Figure(go.Waterfall(
             name="Sonno", orientation="v", measure=["absolute", "relative", "relative", "total"],
@@ -1071,7 +1096,7 @@ elif pagina == "Consiglio Finale":
         ))
         fig_sleep_impact.update_layout(title="5. Calcolo Aggiuntivo Ore di Sonno Necessarie", height=400, showlegend=False)
         st.plotly_chart(style_fig(fig_sleep_impact), use_container_width=True)
-        st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> L'allenamento e lo stress di oggi creano micro-rotture che chiedono tempo extra per guarire. Questo grafico ti aggiunge (barre arancioni) le ore necessarie per stanotte rispetto al tuo fabbisogno standard.</div>", unsafe_allow_html=True)
+        st.markdown("<div class='explain-text'>L'allenamento e lo stress di oggi creano micro-rotture che chiedono tempo extra per guarire. Questo grafico ti aggiunge (barre arancioni) le ore necessarie per stanotte rispetto al tuo fabbisogno standard.</div>", unsafe_allow_html=True)
 
         st.markdown("<br>---<br>", unsafe_allow_html=True)
 
@@ -1100,4 +1125,4 @@ elif pagina == "Consiglio Finale":
         )])
         fig_table_riepilogo.update_layout(margin=dict(l=0, r=0, t=0, b=0), height=350)
         st.plotly_chart(style_fig(fig_table_riepilogo), use_container_width=True)
-        st.markdown("<div class='explain-text'><strong>Spiegazione:</strong> Colpo d'occhio su tutti i tuoi indicatori di oggi: OK nella norma, MEDIO da monitorare, ALTO richiede attenzione immediata.</div>", unsafe_allow_html=True)
+        st.markdown("<div class='explain-text'>Colpo d'occhio su tutti i tuoi indicatori di oggi: OK nella norma, MEDIO da monitorare, ALTO richiede attenzione immediata.</div>", unsafe_allow_html=True)
